@@ -66,7 +66,9 @@ function WelcomeIndex() {
 								layoutId="logo"
 							/>
 							<motion.div layoutId="title">
-								<TypographyH1>Tilly</TypographyH1>
+								<TypographyH1>
+									<T k="splash.title" />
+								</TypographyH1>
 							</motion.div>
 						</div>
 						<motion.div

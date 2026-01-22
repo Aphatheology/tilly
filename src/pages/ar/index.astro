@@ -1,0 +1,355 @@
+---
+import MinimalMarketingLayout from "#www/layouts/MinimalMarketingLayout.astro"
+import { Navbar } from "#www/components/Navbar"
+import { Hero } from "#www/components/Hero"
+import { ContentWithTestimonial } from "#www/components/ContentWithTestimonial"
+import { FeatureGridOffset } from "#www/components/FeatureGridOffset"
+import { FeaturesWithProductScreenshot } from "#www/components/FeaturesWithProductScreenshot"
+import { Testimonials } from "#www/components/Testimonials"
+import { FeatureGridCentered } from "#www/components/FeatureGridCentered"
+import { Pricing } from "#www/components/Pricing"
+import { FAQ } from "#www/components/FAQ"
+import { CTA } from "#www/components/CTA"
+import { Footer } from "#www/components/Footer"
+---
+
+<MinimalMarketingLayout
+	title="Hasiber - يومياتك الروحية الشخصية"
+	description="تتبع أعمالك اليومية ونم في الاتساق. حاسب نفسك قبل أن تحاسب."
+>
+	<Navbar
+		locale="ar"
+		client:load
+		logo={{
+			text: "Hasiber",
+			href: "/ar/",
+		}}
+		navigation={[
+			{ name: "المميزات", href: "#features" },
+			{ name: "الخطط", href: "#experience" },
+			{ name: "الأسئلة الشائعة", href: "#faq" },
+			{ name: "المدونة", href: "/ar/blog" },
+		]}
+		cta={{
+			text: "انتقل إلى التطبيق",
+			href: "/app",
+		}}
+		languages={[
+			{ name: "English", href: "/en/" },
+			{ name: "Deutsch", href: "/de/" },
+			{ name: "العربية", href: "/ar/" },
+		]}
+	/>
+
+	<div class="pt-3 pb-12 md:pb-24">
+		<Hero
+			client:load
+			badge={{
+				text: "النمو الروحي ببساطة",
+				href: "#features",
+				description: "تتبع عباداتك بسهولة",
+			}}
+			title="حاسب نفسك قبل أن تحاسب"
+			description="يساعدك Hasiber على أداء أعمالك اليومية باستمرار. تتبع الصلاة والقرآن والذكر والمزيد مع الدافع اللطيف والتأمل الهادف."
+			primaryCta={{
+				text: "ابدأ رحلتك",
+				href: "/app",
+			}}
+			secondaryCta={{
+				text: "اعرف المزيد",
+				href: "#features",
+			}}
+			media={{
+				kind: "image",
+				src: "/images/screenshots/en-people.webp",
+				alt: "هاتف يعرض لوحة Hasiber",
+				loading: "eager",
+				aspectRatio: "215 / 466",
+				fit: "contain",
+			}}
+		/>
+	</div>
+	<div id="story" class="py-24">
+		<ContentWithTestimonial
+			title="التحدي الذي نواجهه"
+			testimonial={{
+				quote: "معظم المسلمين يزيدون في الدين خلال رمضان، ثم ينقصون بعد رمضان.",
+				author: {
+					name: "النمو الروحي",
+					title: "صراع شائع",
+					avatar: "/images/avatars/carl.webp",
+				},
+			}}
+		>
+			<p>
+				الاتساق في أعمال العبادة من أكبر التحديات للمسلمين. نبدأ بقوة، لكن
+				الحياة تصبح مشغولة وتنزلق ممارساتنا الروحية بعيدًا.
+			</p>
+			<p>
+				<b
+					>يساعدك Hasiber على الحفاظ على الاتساق مع التتبع اللطيف والدافع
+					اليومي والتأمل الهادف.</b
+				>
+			</p>
+		</ContentWithTestimonial>
+	</div>
+	<div class="py-12 md:py-24">
+		<FeatureGridOffset
+			title="التحديات التي يساعدك Hasiber على التغلب عليها"
+			subtitle="مشاكل حقيقية في رحلتك الروحية"
+			problems={[
+				{
+					name: "فقدان الاتساق بعد رمضان",
+					description:
+						"حافظ على زخمك الروحي طوال العام، وليس فقط خلال الأشهر المباركة",
+				},
+				{
+					name: "نسيان الصلوات اليومية",
+					description:
+						"تتبع إتمام صلاتك وبناء عادة الصلاة في الوقت المحدد",
+				},
+				{
+					name: "قراءة القرآن غير المنتظمة",
+					description:
+						"ضع أهدافًا يومية وتتبع تقدمك لجعل القرآن جزءًا ثابتًا من يومك",
+				},
+				{
+					name: "عدم وجود تأمل روحي",
+					description:
+						"خذ وقتًا للتفكير في حالتك الروحية والنمو في الوعي الذاتي",
+				},
+			]}
+		/>
+	</div>
+
+	<div class="py-12 md:py-24">
+		<FeaturesWithProductScreenshot
+			badge="كيف يعمل"
+			title="بسيط. لطيف. مشجع."
+			features={[
+				{
+					name: "تتبع عباداتك",
+					description:
+						"سجل صلواتك اليومية وقراءة القرآن والذكر وأعمال العبادة الأخرى بسهولة.",
+				},
+				{
+					name: "شاهد تقدمك",
+					description:
+						"تعرض لوحة المعلومات المرئية اتساقك وخطوطك ومناطق التحسين.",
+				},
+				{
+					name: "احصل على دافع لطيف",
+					description:
+						"آيات وأحاديث مخصصة بناءً على تقدمك، تشجعك دون حكم.",
+				},
+			]}
+			media={{
+				kind: "image",
+				src: "/images/screenshots/en-person.webp",
+				alt: "هاتف يعرض لوحة Hasiber",
+				aspectRatio: "215 / 466",
+				fit: "contain",
+			}}
+		/>
+	</div>
+	<div class="py-24" id="features">
+		<FeatureGridCentered
+			title="كل ما تحتاجه للنمو الروحي"
+			description="مجموعة أدوات كاملة للتتبع والتأمل والنمو في إيمانك."
+			features={[
+				{
+					name: "تتبع العبادات اليومية",
+					description:
+						"تتبع الصلاة والقرآن والذكر والصدقة والصوم والعادات الروحية المخصصة في مكان واحد",
+					icon: "PersonHearts",
+				},
+				{
+					name: "التأمل الروحي",
+					description:
+						"ملاحظات خاصة للتفكير في حالتك الروحية اليومية وتتبع نموك بمرور الوقت",
+					icon: "Bell",
+				},
+				{
+					name: "الدافع بالذكاء الاصطناعي",
+					description:
+						"آيات وأحاديث يومية مخصصة بناءً على تقدمك، مع تشجيع لطيف عندما تحتاجه",
+					icon: "PhoneFill",
+				},
+				{
+					name: "تتبع المجموعة والعائلة",
+					description:
+						"أنشئ مجموعات مع العائلة أو الأصدقاء لتشجيع المساءلة والمنافسة الروحية الصحية",
+					icon: "Chat",
+				},
+				{
+					name: "النقاط والمكافآت",
+					description:
+						"اكسب نقاطًا للاتساق وافتح المكافآت. اجعل رحلتك الروحية ممتعة بطريقة هادفة.",
+					icon: "Download",
+				},
+				{
+					name: "خصوصية كاملة",
+					description:
+						"بياناتك مشفرة وخاصة. قم بالتصدير في أي وقت. تحكم كامل في يومياتك الروحية.",
+					icon: "CloudCheck",
+				},
+			]}
+		/>
+	</div>
+
+	<div class="py-12 md:py-24">
+		<Testimonials
+			client:load
+			title="ماذا يقول المستخدمون"
+			subtitle="المسلمون يجدون الاتساق في رحلتهم الروحية"
+			testimonials={[
+				{
+					quote:
+						"ساعدني Hasiber في الحفاظ على اتساق صلاتي حتى بعد رمضان. التذكيرات اللطيفة وتتبع التقدم تحفزني.",
+				},
+				{
+					quote:
+						"أحب ميزة الآيات اليومية. إنه مثل وجود مرشد روحي شخصي يعرف بالضبط ما أحتاج إلى سماعه.",
+				},
+				{
+					quote:
+						"ميزة التأمل كانت تحويلية. أخذ الوقت كل يوم للتفكير في حالتي الروحية عمق اتصالي بالله.",
+				},
+				{
+					quote:
+						"التتبع مع عائلتي أنشأ منافسة صحية ومساءلة. نحن جميعًا ننمو معًا.",
+				},
+			]}
+		/>
+	</div>
+	<div id="experience" class="py-24">
+		<Pricing
+			title="اختر تجربتك"
+			subtitle="مجاني أو Pro - أسعار بسيطة للجميع."
+			tiers={[
+				{
+					name: "مجاني",
+					id: "tier-free",
+					href: "/app",
+					priceMonthly: "مجاني",
+					priceSuffix: null,
+					description: "المجاني يتطلب تسجيل الدخول للمزامنة والإشعارات",
+					features: [
+						"تتبع جميع أنواع العبادات",
+						"لوحة تقدم يومية",
+						"ملاحظات التأمل الروحي",
+						"الإشعارات",
+						"المزامنة عبر الأجهزة",
+						"تصدير بياناتك",
+					],
+					featured: false,
+					ctaText: "سجل مجانًا",
+				},
+				{
+					name: "Pro",
+					id: "tier-plus",
+					href: "/app",
+					priceMonthly: "$6",
+					priceSuffix: "/شهر",
+					description: "محرك الدافع بالذكاء الاصطناعي وميزات المجموعة - تجربة مجانية لمدة 30 يومًا",
+					features: [
+						"كل شيء في المجاني",
+						"آيات وأحاديث يومية بالذكاء الاصطناعي",
+						"محرك دافع مخصص",
+						"تتبع المجموعة والعائلة",
+						"تحليلات ورؤى متقدمة",
+						"نظام النقاط والمكافآت",
+						"دعم التطوير المستدام",
+					],
+					featured: true,
+					ctaText: "ترقية إلى Pro",
+				},
+			]}
+		/>
+	</div>
+
+	<div id="faq" class="py-24">
+		<FAQ
+			client:load
+			title="الأسئلة الشائعة"
+			faqs={[
+				{
+					question: "كيف يختلف هذا عن متتبعات العادات الأخرى؟",
+					answer:
+						"Hasiber مصمم خصيصًا للنمو الروحي. يفهم الاحتياجات الفريدة للمسلمين الذين يتتبعون أعمال العبادة، ويوفر سياقًا إسلاميًا من خلال الآيات والأحاديث، وينشئ مساحة غير قضائية للتأمل والنمو.",
+				},
+				{
+					question: "هل سيعمل Hasiber بدون اتصال بالإنترنت؟",
+					answer:
+						"نعم! تعمل جميع ميزات التتبع بدون اتصال بالإنترنت. تزامن بياناتك عندما تعود إلى الإنترنت. فقط ميزات الدافع بالذكاء الاصطناعي تتطلب اتصالاً بالإنترنت.",
+				},
+				{
+					question: "ماذا لو فاتني يوم أو تأخرت؟",
+					answer:
+						"Hasiber مصمم ليكون لطيفًا ومشجعًا، وليس قضائيًا. التقط من حيث توقفت. يوفر التطبيق الدافع والدعم، وليس الذنب أو الضغط.",
+				},
+				{
+					question: "هل بياناتي الروحية خاصة؟",
+					answer:
+						"بالتأكيد. يتم تشفير بياناتك في المتصفح قبل المزامنة. فقط أنت لديك إمكانية الوصول إلى تأملاتك وتتبعك. يمكنك تصدير بياناتك في أي وقت. خصوصية وتحكم كاملان.",
+				},
+				{
+					question: "هل يمكنني التتبع مع عائلتي؟",
+					answer:
+						"نعم! يتضمن Hasiber Pro ميزات تتبع المجموعة والعائلة. أنشئ مجموعات لتشجيع المساءلة والمنافسة الروحية الصحية مع الأحباء.",
+				},
+				{
+					question: "لماذا أدفع مقابل Pro عندما توجد النسخة المجانية؟",
+					answer:
+						"تتضمن النسخة المجانية جميع ميزات التتبع الأساسية. يضيف Pro الدافع بالذكاء الاصطناعي وميزات المجموعة والتحليلات المتقدمة ويدعم التطوير المستدام. جربه مجانًا لمدة 30 يومًا!",
+				},
+			]}
+		/>
+	</div>
+
+	<CTA
+		title="هل أنت مستعد للنمو في الاتساق؟"
+		primaryCta={{
+			text: "ابدأ رحلتك",
+			href: "/app",
+		}}
+	/>
+
+	<Footer
+		navigation={{
+			main: [
+				{ name: "المميزات", href: "#features" },
+				{ name: "الخطط", href: "#experience" },
+				{ name: "الأسئلة الشائعة", href: "#faq" },
+				{ name: "المدونة", href: "/ar/blog" },
+				{ name: "الطابع", href: "/ar/imprint" },
+				{ name: "الخصوصية", href: "/ar/privacy" },
+			],
+			social: [
+				{
+					name: "Twitter",
+					href: "https://twitter.com/tillydotsocial",
+					icon: "Twitter",
+				},
+				{
+					name: "Instagram",
+					href: "https://instagram.com/tilly.social",
+					icon: "Instagram",
+				},
+				{
+					name: "GitHub",
+					href: "https://github.com/ccssmnn/tilly",
+					icon: "Github",
+				},
+			],
+			languages: [
+				{ name: "English", href: "/en/" },
+				{ name: "Deutsch", href: "/de/" },
+				{ name: "العربية", href: "/ar/" },
+			],
+		}}
+		company={{
+			name: "Hasiber",
+		}}
+	/>
+</MinimalMarketingLayout>

@@ -4,6 +4,8 @@ import { Group, type ID } from "jazz-tools"
 import { T, useIntl } from "#shared/intl/setup"
 import { ExclamationTriangle } from "react-bootstrap-icons"
 import { Person, UserAccount } from "#shared/schema/user"
+import { IbaadahGroup } from "#shared/schema/group"
+import { co } from "jazz-tools"
 import { toast } from "sonner"
 import { useState, useEffect, useRef } from "react"
 import { Button } from "#shared/ui/button"
@@ -28,11 +30,19 @@ export const Route = createFileRoute("/_app/invite")({
 
 let PENDING_INVITE_KEY = "tilly:pending-invite"
 
-type InviteData = {
-	personId: string
-	inviteGroupId: string
-	inviteSecret: string
-}
+type InviteData =
+	| {
+			type: "person"
+			personId: string
+			inviteGroupId: string
+			inviteSecret: string
+	  }
+	| {
+			type: "group"
+			groupId: string
+			inviteGroupId: string
+			inviteSecret: string
+	  }
 
 function InviteScreen() {
 	let { inviteData } = Route.useLoaderData()
@@ -50,7 +60,9 @@ function InviteScreen() {
 }
 
 function AcceptInviteHandler({ inviteData }: { inviteData: InviteData }) {
-	let account = useAccount(UserAccount, { resolve: { root: { people: true } } })
+	let account = useAccount(UserAccount, {
+		resolve: { root: { people: true, ibaadahGroups: { $each: true } } },
+	})
 	let isAuthenticated = useIsAuthenticated()
 	let navigate = Route.useNavigate()
 	let t = useIntl()
@@ -66,7 +78,6 @@ function AcceptInviteHandler({ inviteData }: { inviteData: InviteData }) {
 			acceptingRef.current = true
 
 			try {
-				// Accept the invite to join InviteGroup
 				await account.acceptInvite(
 					inviteData.inviteGroupId as ID<Group>,
 					inviteData.inviteSecret as `inviteSecret_z${string}`,
@@ -75,37 +86,76 @@ function AcceptInviteHandler({ inviteData }: { inviteData: InviteData }) {
 
 				clearPendingInvite()
 
-				// Now try to load the person - if access was revoked, this will fail
-				let person = await Person.load(
-					inviteData.personId as ID<typeof Person>,
-					{ resolve: { avatar: true } },
-				)
-
-				if (!person?.$isLoaded) {
-					setIsRevoked(true)
-					setIsProcessing(false)
-					return
-				}
-
-				// Check if user already has this person (reload to get fresh data)
-				let freshAccount = await UserAccount.load(account.$jazz.id, {
-					resolve: { root: { people: true } },
-				})
-				let alreadyHas =
-					freshAccount?.$isLoaded &&
-					freshAccount.root.people.some(
-						p => p?.$jazz.id === inviteData.personId,
+				if (inviteData.type === "person") {
+					let person = await Person.load(
+						inviteData.personId as ID<typeof Person>,
+						{
+							resolve: { avatar: true },
+						},
 					)
 
-				if (!alreadyHas) {
-					account.root.people.$jazz.push(person)
-					toast.success(t("invite.success", { name: person.name }))
-				}
+					if (!person?.$isLoaded) {
+						setIsRevoked(true)
+						setIsProcessing(false)
+						return
+					}
 
-				navigate({
-					to: "/people/$personID",
-					params: { personID: inviteData.personId },
-				})
+					let freshAccount = await UserAccount.load(account.$jazz.id, {
+						resolve: { root: { people: true } },
+					})
+					let alreadyHas =
+						freshAccount?.$isLoaded &&
+						freshAccount.root.people.some(
+							p => p?.$jazz.id === inviteData.personId,
+						)
+
+					if (!alreadyHas) {
+						account.root.people.$jazz.push(person)
+						toast.success(t("invite.success", { name: person.name }))
+					}
+
+					navigate({
+						to: "/people/$personID",
+						params: { personID: inviteData.personId },
+					})
+				} else {
+					let group = await IbaadahGroup.load(
+						inviteData.groupId as ID<typeof IbaadahGroup>,
+					)
+					if (!group?.$isLoaded) {
+						setIsRevoked(true)
+						setIsProcessing(false)
+						return
+					}
+
+					let freshAccount = await UserAccount.load(account.$jazz.id, {
+						resolve: { root: { ibaadahGroups: { $each: true } } },
+					})
+					let alreadyHas =
+						freshAccount?.$isLoaded &&
+						freshAccount.root.ibaadahGroups?.some(
+							g => g?.$jazz.id === inviteData.groupId,
+						)
+
+					let groupsList = account.root.ibaadahGroups
+					if (!groupsList) {
+						account.root.$jazz.set(
+							"ibaadahGroups",
+							co.list(IbaadahGroup).create([]),
+						)
+						groupsList = account.root.ibaadahGroups
+					}
+
+					if (!alreadyHas && groupsList) {
+						groupsList.$jazz.push(group)
+						toast.success(t("invite.success.group", { name: group.name }))
+					}
+
+					navigate({
+						to: "/groups/$groupID",
+						params: { groupID: inviteData.groupId },
+					})
+				}
 			} catch (err) {
 				console.error("Failed to accept invite:", err)
 				setError(t("invite.error.failed"))
@@ -260,16 +310,29 @@ function SignInPromptState() {
 }
 
 function parseInviteHash(hash: string): InviteData | null {
-	// Format: #/person/{personId}/invite/{inviteGroupId}/{inviteSecret}
-	let match = hash.match(
+	let personMatch = hash.match(
 		/^#\/person\/(co_[^/]+)\/invite\/(co_[^/]+)\/(inviteSecret_[^/]+)$/,
 	)
-	if (!match) return null
-	return {
-		personId: match[1],
-		inviteGroupId: match[2],
-		inviteSecret: match[3],
+	if (personMatch) {
+		return {
+			type: "person",
+			personId: personMatch[1],
+			inviteGroupId: personMatch[2],
+			inviteSecret: personMatch[3],
+		}
 	}
+	let groupMatch = hash.match(
+		/^#\/group\/(co_[^/]+)\/invite\/(co_[^/]+)\/(inviteSecret_[^/]+)$/,
+	)
+	if (groupMatch) {
+		return {
+			type: "group",
+			groupId: groupMatch[1],
+			inviteGroupId: groupMatch[2],
+			inviteSecret: groupMatch[3],
+		}
+	}
+	return null
 }
 
 function getOrRestoreInviteData(): InviteData | null {

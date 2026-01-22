@@ -1,7 +1,7 @@
 ---
 layout: ../../www/layouts/LegalPageLayout.astro
 title: "Imprint"
-description: "Legal information and contact details for Tilly."
+description: "Legal information and contact details for Hasiber."
 locale: "en"
 ---
 

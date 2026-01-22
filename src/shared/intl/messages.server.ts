@@ -12,6 +12,16 @@ let baseServerMessages = messages({
 		"A few moments to reach out could brighten someone's day ✨",
 	"server.push.assistantComplete.title": "Tilly has a response for you",
 	"server.push.assistantComplete.body": "Your message has been answered ✨",
+	"server.push.prayerReminder.fajr.title": "Fajr Prayer Time",
+	"server.push.prayerReminder.fajr.body": "It's time for Fajr prayer 🌅",
+	"server.push.prayerReminder.dhuhr.title": "Dhuhr Prayer Time",
+	"server.push.prayerReminder.dhuhr.body": "It's time for Dhuhr prayer ☀️",
+	"server.push.prayerReminder.asr.title": "Asr Prayer Time",
+	"server.push.prayerReminder.asr.body": "It's time for Asr prayer 🌤️",
+	"server.push.prayerReminder.maghrib.title": "Maghrib Prayer Time",
+	"server.push.prayerReminder.maghrib.body": "It's time for Maghrib prayer 🌇",
+	"server.push.prayerReminder.isha.title": "Isha Prayer Time",
+	"server.push.prayerReminder.isha.body": "It's time for Isha prayer 🌙",
 
 	"server.error.notificationSettingsNotConfigured":
 		"NotificationSettings not configured",
@@ -30,6 +40,17 @@ let deServerMessages = translate(baseServerMessages, {
 		"Manchmal reicht ein kleiner Moment, um jemandem den Tag zu versüßen ✨",
 	"server.push.assistantComplete.title": "Tilly hat eine Antwort für dich",
 	"server.push.assistantComplete.body": "Deine Nachricht wurde beantwortet ✨",
+	"server.push.prayerReminder.fajr.title": "Fajr Gebetszeit",
+	"server.push.prayerReminder.fajr.body": "Es ist Zeit für das Fajr-Gebet 🌅",
+	"server.push.prayerReminder.dhuhr.title": "Dhuhr Gebetszeit",
+	"server.push.prayerReminder.dhuhr.body": "Es ist Zeit für das Dhuhr-Gebet ☀️",
+	"server.push.prayerReminder.asr.title": "Asr Gebetszeit",
+	"server.push.prayerReminder.asr.body": "Es ist Zeit für das Asr-Gebet 🌤️",
+	"server.push.prayerReminder.maghrib.title": "Maghrib Gebetszeit",
+	"server.push.prayerReminder.maghrib.body":
+		"Es ist Zeit für das Maghrib-Gebet 🌇",
+	"server.push.prayerReminder.isha.title": "Isha Gebetszeit",
+	"server.push.prayerReminder.isha.body": "Es ist Zeit für das Isha-Gebet 🌙",
 
 	"server.error.notificationSettingsNotConfigured":
 		"Benachrichtigungseinstellungen nicht konfiguriert",

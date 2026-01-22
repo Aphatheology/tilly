@@ -15,7 +15,7 @@ import {
 } from "#shared/ui/dropdown-menu"
 import { List } from "react-bootstrap-icons"
 import { IntlProvider, T } from "#shared/intl/setup"
-import { messagesDe, messagesEn } from "#shared/intl/messages"
+import { messagesDe, messagesEn, messagesAr } from "#shared/intl/messages"
 
 export { Navbar }
 
@@ -25,7 +25,7 @@ interface NavigationItem {
 }
 
 interface NavbarProps {
-	locale: "en" | "de"
+	locale: "en" | "de" | "ar"
 	logo: {
 		text: string
 		href: string
@@ -42,11 +42,15 @@ function Navbar({ logo, navigation, cta, locale, languages }: NavbarProps) {
 	let [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 	let [langMenuOpen, setLangMenuOpen] = useState(false)
 	let [mobileLangMenuOpen, setMobileLangMenuOpen] = useState(false)
-	let currentLanguageEmoji = locale === "de" ? "🇩🇪" : "🇺🇸"
+	let currentLanguageEmoji =
+		locale === "ar" ? "🇸🇦" : locale === "de" ? "🇩🇪" : "🇺🇸"
+
+	let messages =
+		locale === "ar" ? messagesAr : locale === "de" ? messagesDe : messagesEn
 
 	return (
 		<IntlProvider
-			messages={locale === "de" ? messagesDe : messagesEn}
+			messages={messages as unknown as typeof messagesEn}
 			locale={locale}
 		>
 			<header className="bg-background border-border sticky inset-x-0 top-0 z-50 border-b">

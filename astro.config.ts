@@ -15,7 +15,7 @@ export default defineConfig({
 	adapter: runtimeAdapter,
 	devToolbar: { enabled: false },
 	i18n: {
-		locales: ["en", "de"],
+		locales: ["en", "de", "ar"],
 		defaultLocale: "en",
 		routing: {
 			prefixDefaultLocale: false,

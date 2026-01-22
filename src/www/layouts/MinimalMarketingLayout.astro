@@ -18,10 +18,16 @@ let canonicalUrl = new URL(
 ).toString()
 let ogImageUrl = new URL(ogImage ?? "/og.png", siteBaseUrl).toString()
 let metaDescription = description ?? ""
+let locale = requestUrl.pathname.startsWith("/ar")
+	? "ar"
+	: requestUrl.pathname.startsWith("/de")
+		? "de"
+		: "en"
+let isRTL = locale === "ar"
 ---
 
 <!doctype html>
-<html lang="en">
+<html lang={locale} dir={isRTL ? "rtl" : "ltr"}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content={metaDescription} />

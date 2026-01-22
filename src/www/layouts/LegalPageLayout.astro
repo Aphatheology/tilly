@@ -6,7 +6,7 @@ import { Footer } from "#www/components/Footer"
 export interface Props {
 	title: string
 	description?: string
-	locale?: "en" | "de"
+	locale?: "en" | "de" | "ar"
 }
 
 let { title, description, locale = "en" } = Astro.props
@@ -19,49 +19,69 @@ let canonicalUrl = new URL(
 let ogImageUrl = new URL("/og.png", siteBaseUrl).toString()
 let metaDescription = description ?? ""
 
-// Localized navigation
+let isRTL = locale === "ar"
+
 let localizedNav =
-	locale === "de"
+	locale === "ar"
 		? {
-				home: "/de/",
-				features: "/de/#features",
-				pricing: "/de/#pricing",
-				faq: "/de/#faq",
-				blog: "/de/blog",
-				imprint: "/de/imprint",
-				privacy: "/de/privacy",
+				home: "/ar/",
+				features: "/ar/#features",
+				pricing: "/ar/#experience",
+				faq: "/ar/#faq",
+				blog: "/ar/blog",
+				imprint: "/ar/imprint",
+				privacy: "/ar/privacy",
 				labels: {
-					features: "Funktionen",
-					pricing: "Tarife",
-					faq: "FAQ",
-					blog: "Blog",
-					imprint: "Impressum",
-					privacy: "Datenschutz",
-					goToApp: "Zur App",
+					features: "المميزات",
+					pricing: "الخطط",
+					faq: "الأسئلة الشائعة",
+					blog: "المدونة",
+					imprint: "الطابع",
+					privacy: "الخصوصية",
+					goToApp: "انتقل إلى التطبيق",
 				},
 			}
-		: {
-				home: "/en/",
-				features: "/en/#features",
-				pricing: "/en/#pricing",
-				faq: "/en/#faq",
-				blog: "/en/blog",
-				imprint: "/en/imprint",
-				privacy: "/en/privacy",
-				labels: {
-					features: "Features",
-					pricing: "Pricing",
-					faq: "FAQ",
-					blog: "Blog",
-					imprint: "Imprint",
-					privacy: "Privacy",
-					goToApp: "Go to App",
-				},
-			}
+		: locale === "de"
+			? {
+					home: "/de/",
+					features: "/de/#features",
+					pricing: "/de/#pricing",
+					faq: "/de/#faq",
+					blog: "/de/blog",
+					imprint: "/de/imprint",
+					privacy: "/de/privacy",
+					labels: {
+						features: "Funktionen",
+						pricing: "Tarife",
+						faq: "FAQ",
+						blog: "Blog",
+						imprint: "Impressum",
+						privacy: "Datenschutz",
+						goToApp: "Zur App",
+					},
+				}
+			: {
+					home: "/en/",
+					features: "/en/#features",
+					pricing: "/en/#pricing",
+					faq: "/en/#faq",
+					blog: "/en/blog",
+					imprint: "/en/imprint",
+					privacy: "/en/privacy",
+					labels: {
+						features: "Features",
+						pricing: "Pricing",
+						faq: "FAQ",
+						blog: "Blog",
+						imprint: "Imprint",
+						privacy: "Privacy",
+						goToApp: "Go to App",
+					},
+				}
 ---
 
 <!doctype html>
-<html lang={locale}>
+<html lang={locale} dir={isRTL ? "rtl" : "ltr"}>
 	<head>
 		<meta charset="UTF-8" />
 		<meta name="description" content={metaDescription} />
@@ -124,14 +144,15 @@ let localizedNav =
 					{ name: "Twitter", href: "#", icon: "Twitter" },
 					{ name: "GitHub", href: "#", icon: "Github" },
 				],
-				languages: [
-					{ name: "English", href: "/en/" },
-					{ name: "Deutsch", href: "/de/" },
-				],
-			}}
-			company={{
-				name: "Tilly",
-			}}
+			languages: [
+				{ name: "English", href: "/en/" },
+				{ name: "Deutsch", href: "/de/" },
+				{ name: "العربية", href: "/ar/" },
+			],
+		}}
+		company={{
+			name: "Hasiber",
+		}}
 		/>
 	</body>
 </html>

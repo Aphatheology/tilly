@@ -65,6 +65,9 @@ import { tryCatch } from "#shared/lib/trycatch"
 import { co } from "jazz-tools"
 import { Person } from "#shared/schema/user"
 import { useHasPlusAccess } from "#app/features/plus"
+import { useTheme } from "#app/hooks/use-theme"
+import { themeConfigs } from "#shared/types/theme"
+import { IbaadahReminderSettings } from "#app/features/ibaadah-reminder-settings"
 
 export const Route = createFileRoute("/_app/settings")({
 	loader: async ({ context }) => {
@@ -85,6 +88,7 @@ let resolve = {
 		assistant: true,
 		notificationSettings: true,
 		usageTracking: true,
+		ibaadahSettings: true,
 	},
 } as const satisfies ResolveQuery<typeof UserAccount>
 
@@ -109,6 +113,8 @@ function SettingsScreen() {
 				<ProfileSection me={currentMe} />
 				{hasPlusAccess && <AssistantSection me={currentMe} />}
 				<LanguageSection />
+				<ThemeSection />
+				<IbaadahReminderSettings me={currentMe} />
 				<NotificationSettings me={currentMe} />
 				{!isPWAInstalled && <PWASection />}
 				<AppSection />
@@ -127,7 +133,7 @@ function LanguageSection() {
 
 	let currentLang = currentMe.root.language || "en"
 
-	function setLanguage(lang: "de" | "en") {
+	function setLanguage(lang: "de" | "en" | "ar") {
 		currentMe.root.$jazz.set("language", lang)
 	}
 
@@ -151,10 +157,46 @@ function LanguageSection() {
 						<SelectItem value="de">
 							<T k="language.name.de" />
 						</SelectItem>
+						<SelectItem value="ar">
+							<T k="language.name.ar" />
+						</SelectItem>
 					</SelectContent>
 				</Select>
 				<TypographyMuted className="text-xs">
 					<T k="settings.language.comingSoon" />
+				</TypographyMuted>
+			</div>
+		</SettingsSection>
+	)
+}
+
+function ThemeSection() {
+	let { theme, setTheme } = useTheme()
+
+	return (
+		<SettingsSection
+			title="Theme"
+			description="Choose your preferred color theme"
+		>
+			<div className="space-y-2">
+				<Label>Select Theme</Label>
+				<Select value={theme} onValueChange={setTheme}>
+					<SelectTrigger className="w-full">
+						<SelectValue />
+					</SelectTrigger>
+					<SelectContent className="w-full">
+						<SelectItem value="current">{themeConfigs.current.name}</SelectItem>
+						<SelectItem value="hasiber">{themeConfigs.hasiber.name}</SelectItem>
+						<SelectItem value="current-dark">
+							{themeConfigs["current-dark"].name}
+						</SelectItem>
+						<SelectItem value="hasiber-dark">
+							{themeConfigs["hasiber-dark"].name}
+						</SelectItem>
+					</SelectContent>
+				</Select>
+				<TypographyMuted className="text-xs">
+					{themeConfigs[theme].description}
 				</TypographyMuted>
 			</div>
 		</SettingsSection>

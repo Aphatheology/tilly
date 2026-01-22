@@ -16,9 +16,13 @@ import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppRemindersRouteImport } from './routes/_app.reminders'
 import { Route as AppNotesRouteImport } from './routes/_app.notes'
 import { Route as AppInviteRouteImport } from './routes/_app.invite'
+import { Route as AppIbaadahRouteImport } from './routes/_app.ibaadah'
+import { Route as AppGroupsRouteImport } from './routes/_app.groups'
+import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppAssistantRouteImport } from './routes/_app.assistant'
 import { Route as AppPeopleIndexRouteImport } from './routes/_app.people.index'
 import { Route as AppPeoplePersonIDRouteImport } from './routes/_app.people.$personID'
+import { Route as AppGroupsGroupIDRouteImport } from './routes/_app.groups.$groupID'
 
 const TourRoute = TourRouteImport.update({
   id: '/tour',
@@ -54,6 +58,21 @@ const AppInviteRoute = AppInviteRouteImport.update({
   path: '/invite',
   getParentRoute: () => AppRoute,
 } as any)
+const AppIbaadahRoute = AppIbaadahRouteImport.update({
+  id: '/ibaadah',
+  path: '/ibaadah',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppGroupsRoute = AppGroupsRouteImport.update({
+  id: '/groups',
+  path: '/groups',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppDashboardRoute = AppDashboardRouteImport.update({
+  id: '/dashboard',
+  path: '/dashboard',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppAssistantRoute = AppAssistantRouteImport.update({
   id: '/assistant',
   path: '/assistant',
@@ -69,15 +88,24 @@ const AppPeoplePersonIDRoute = AppPeoplePersonIDRouteImport.update({
   path: '/people/$personID',
   getParentRoute: () => AppRoute,
 } as any)
+const AppGroupsGroupIDRoute = AppGroupsGroupIDRouteImport.update({
+  id: '/$groupID',
+  path: '/$groupID',
+  getParentRoute: () => AppGroupsRoute,
+} as any)
 
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/tour': typeof TourRoute
   '/assistant': typeof AppAssistantRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/groups': typeof AppGroupsRouteWithChildren
+  '/ibaadah': typeof AppIbaadahRoute
   '/invite': typeof AppInviteRoute
   '/notes': typeof AppNotesRoute
   '/reminders': typeof AppRemindersRoute
   '/settings': typeof AppSettingsRoute
+  '/groups/$groupID': typeof AppGroupsGroupIDRoute
   '/people/$personID': typeof AppPeoplePersonIDRoute
   '/people/': typeof AppPeopleIndexRoute
 }
@@ -85,10 +113,14 @@ export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/tour': typeof TourRoute
   '/assistant': typeof AppAssistantRoute
+  '/dashboard': typeof AppDashboardRoute
+  '/groups': typeof AppGroupsRouteWithChildren
+  '/ibaadah': typeof AppIbaadahRoute
   '/invite': typeof AppInviteRoute
   '/notes': typeof AppNotesRoute
   '/reminders': typeof AppRemindersRoute
   '/settings': typeof AppSettingsRoute
+  '/groups/$groupID': typeof AppGroupsGroupIDRoute
   '/people/$personID': typeof AppPeoplePersonIDRoute
   '/people': typeof AppPeopleIndexRoute
 }
@@ -98,10 +130,14 @@ export interface FileRoutesById {
   '/_app': typeof AppRouteWithChildren
   '/tour': typeof TourRoute
   '/_app/assistant': typeof AppAssistantRoute
+  '/_app/dashboard': typeof AppDashboardRoute
+  '/_app/groups': typeof AppGroupsRouteWithChildren
+  '/_app/ibaadah': typeof AppIbaadahRoute
   '/_app/invite': typeof AppInviteRoute
   '/_app/notes': typeof AppNotesRoute
   '/_app/reminders': typeof AppRemindersRoute
   '/_app/settings': typeof AppSettingsRoute
+  '/_app/groups/$groupID': typeof AppGroupsGroupIDRoute
   '/_app/people/$personID': typeof AppPeoplePersonIDRoute
   '/_app/people/': typeof AppPeopleIndexRoute
 }
@@ -111,10 +147,14 @@ export interface FileRouteTypes {
     | '/'
     | '/tour'
     | '/assistant'
+    | '/dashboard'
+    | '/groups'
+    | '/ibaadah'
     | '/invite'
     | '/notes'
     | '/reminders'
     | '/settings'
+    | '/groups/$groupID'
     | '/people/$personID'
     | '/people/'
   fileRoutesByTo: FileRoutesByTo
@@ -122,10 +162,14 @@ export interface FileRouteTypes {
     | '/'
     | '/tour'
     | '/assistant'
+    | '/dashboard'
+    | '/groups'
+    | '/ibaadah'
     | '/invite'
     | '/notes'
     | '/reminders'
     | '/settings'
+    | '/groups/$groupID'
     | '/people/$personID'
     | '/people'
   id:
@@ -134,10 +178,14 @@ export interface FileRouteTypes {
     | '/_app'
     | '/tour'
     | '/_app/assistant'
+    | '/_app/dashboard'
+    | '/_app/groups'
+    | '/_app/ibaadah'
     | '/_app/invite'
     | '/_app/notes'
     | '/_app/reminders'
     | '/_app/settings'
+    | '/_app/groups/$groupID'
     | '/_app/people/$personID'
     | '/_app/people/'
   fileRoutesById: FileRoutesById
@@ -199,6 +247,27 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppInviteRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/ibaadah': {
+      id: '/_app/ibaadah'
+      path: '/ibaadah'
+      fullPath: '/ibaadah'
+      preLoaderRoute: typeof AppIbaadahRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/groups': {
+      id: '/_app/groups'
+      path: '/groups'
+      fullPath: '/groups'
+      preLoaderRoute: typeof AppGroupsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/dashboard': {
+      id: '/_app/dashboard'
+      path: '/dashboard'
+      fullPath: '/dashboard'
+      preLoaderRoute: typeof AppDashboardRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/assistant': {
       id: '/_app/assistant'
       path: '/assistant'
@@ -220,11 +289,33 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppPeoplePersonIDRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/groups/$groupID': {
+      id: '/_app/groups/$groupID'
+      path: '/$groupID'
+      fullPath: '/groups/$groupID'
+      preLoaderRoute: typeof AppGroupsGroupIDRouteImport
+      parentRoute: typeof AppGroupsRoute
+    }
   }
 }
 
+interface AppGroupsRouteChildren {
+  AppGroupsGroupIDRoute: typeof AppGroupsGroupIDRoute
+}
+
+const AppGroupsRouteChildren: AppGroupsRouteChildren = {
+  AppGroupsGroupIDRoute: AppGroupsGroupIDRoute,
+}
+
+const AppGroupsRouteWithChildren = AppGroupsRoute._addFileChildren(
+  AppGroupsRouteChildren,
+)
+
 interface AppRouteChildren {
   AppAssistantRoute: typeof AppAssistantRoute
+  AppDashboardRoute: typeof AppDashboardRoute
+  AppGroupsRoute: typeof AppGroupsRouteWithChildren
+  AppIbaadahRoute: typeof AppIbaadahRoute
   AppInviteRoute: typeof AppInviteRoute
   AppNotesRoute: typeof AppNotesRoute
   AppRemindersRoute: typeof AppRemindersRoute
@@ -235,6 +326,9 @@ interface AppRouteChildren {
 
 const AppRouteChildren: AppRouteChildren = {
   AppAssistantRoute: AppAssistantRoute,
+  AppDashboardRoute: AppDashboardRoute,
+  AppGroupsRoute: AppGroupsRouteWithChildren,
+  AppIbaadahRoute: AppIbaadahRoute,
   AppInviteRoute: AppInviteRoute,
   AppNotesRoute: AppNotesRoute,
   AppRemindersRoute: AppRemindersRoute,

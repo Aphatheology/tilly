@@ -12,12 +12,15 @@ const baseUiMessages = messages({
 	"common.save": "Save",
 	"common.change": "Change",
 	"common.clear": "Clear",
+	"common.edit": "Edit",
 	"common.add": "Add",
 	"common.close": "Close",
 	"common.undo": "Undo",
 	"common.back": "Back",
 	"common.loading": "Loading...",
 	"common.unknown": "Unknown",
+	"common.all": "All",
+	"common.delete": "Delete",
 
 	// Authentication messages
 	"auth.signIn.title": "Sync Across Devices",
@@ -56,9 +59,11 @@ const baseUiMessages = messages({
 	"form.saving": "Saving...",
 
 	// Navigation messages
+	"nav.dashboard": "Dashboard",
 	"nav.people": "People",
 	"nav.notes": "Notes",
 	"nav.reminders": "Reminder",
+	"nav.ibaadah": "Ibaadah",
 	"nav.assistant": "Tilly",
 	"nav.settings": "Settings",
 	"nav.install": "Install",
@@ -67,6 +72,28 @@ const baseUiMessages = messages({
 	// Language messages
 	"language.name.en": "🇺🇸 English",
 	"language.name.de": "🇩🇪 German",
+	"language.name.ar": "🇸🇦 العربية",
+
+	"dashboard.title": "Dashboard",
+	"dashboard.pageTitle": "Dashboard",
+	"dashboard.add": "Add",
+	"dashboard.salah.title": "Salah",
+	"dashboard.salah.description": "Five daily prayers",
+	"dashboard.quran.title": "Quran",
+	"dashboard.quran.description": "Daily reading",
+	"dashboard.dhikr.title": "Dhikr",
+	"dashboard.dhikr.description": "Remembrance of Allah",
+	"dashboard.sadaqa.title": "Sadaqa",
+	"dashboard.sadaqa.description": "Charity and good deeds",
+	"dashboard.fasting.title": "Fasting",
+	"dashboard.fasting.description": "Ramadan and voluntary fasts",
+	"dashboard.todayProgress.title": "Today's Progress",
+	"dashboard.todayProgress.description": "Your Ibaadah entries for today",
+	"dashboard.todayProgress.entries": "entries",
+	"dashboard.customHabits.title": "Custom Ibaadah",
+	"dashboard.customHabits.description": "Your custom habits",
+	"dashboard.customHabits.add": "Add",
+	"dashboard.customHabits.empty": "No custom habits yet",
 
 	// Error messages
 	"error.title": "Something went wrong",
@@ -131,8 +158,8 @@ const baseUiMessages = messages({
 	"data.import.dialog.import": "Import Data",
 
 	// Splash screen messages
-	"splash.title": "Tilly",
-	"splash.logoAlt": "Tilly logo",
+	"splash.title": "Hasiber",
+	"splash.logoAlt": "Hasiber logo",
 
 	// Markdown editor messages
 	"markdown.preview": "Preview",
@@ -148,6 +175,12 @@ const baseUiMessages = messages({
 	"invite.accepting": "Accepting invite...",
 	"invite.loading.description": "Please wait while we set things up.",
 	"invite.success": "You now have access to {$name}",
+	"invite.success.group": "You joined {$name}",
+	"invite.success.copy": "Invite link copied",
+	"invite.group.title": "Share Ibaadah Group",
+	"invite.generate": "Generate invite link",
+	"invite.link": "Invite link",
+	"invite.share": "Share",
 	"invite.error.invalid": "Invalid invite link",
 	"invite.error.invalid.title": "Invalid invite link",
 	"invite.error.invalid.description":
@@ -173,12 +206,15 @@ const deUiMessages = translate(baseUiMessages, {
 	"common.save": "Speichern",
 	"common.change": "Ändern",
 	"common.clear": "Löschen",
+	"common.edit": "Bearbeiten",
 	"common.add": "Hinzufügen",
 	"common.close": "Schließen",
 	"common.undo": "Rückgängig",
 	"common.back": "Zurück",
 	"common.loading": "Lädt...",
 	"common.unknown": "Unbekannt",
+	"common.all": "Alle",
+	"common.delete": "Löschen",
 
 	// Authentication messages
 	"auth.signIn.title": "Über Geräte hinweg synchronisieren",
@@ -217,17 +253,40 @@ const deUiMessages = translate(baseUiMessages, {
 	"form.saving": "Speichern...",
 
 	// Navigation messages
+	"nav.dashboard": "Dashboard",
 	"nav.people": "Personen",
 	"nav.notes": "Notizen",
 	"nav.reminders": "Erinnerungen",
+	"nav.ibaadah": "Ibaadah",
 	"nav.assistant": "Tilly",
 	"nav.settings": "Einstellungen",
+	"dashboard.title": "Dashboard",
+	"dashboard.pageTitle": "Dashboard",
+	"dashboard.add": "Hinzufügen",
+	"dashboard.salah.title": "Salah",
+	"dashboard.salah.description": "Fünf tägliche Gebete",
+	"dashboard.quran.title": "Quran",
+	"dashboard.quran.description": "Tägliches Lesen",
+	"dashboard.dhikr.title": "Dhikr",
+	"dashboard.dhikr.description": "Gedenken an Allah",
+	"dashboard.sadaqa.title": "Sadaqa",
+	"dashboard.sadaqa.description": "Wohltätigkeit und gute Taten",
+	"dashboard.fasting.title": "Fasten",
+	"dashboard.fasting.description": "Ramadan und freiwilliges Fasten",
+	"dashboard.todayProgress.title": "Fortschritt heute",
+	"dashboard.todayProgress.description": "Ihre Ibaadah-Einträge für heute",
+	"dashboard.todayProgress.entries": "Einträge",
+	"dashboard.customHabits.title": "Benutzerdefinierte Ibaadah",
+	"dashboard.customHabits.description": "Ihre benutzerdefinierten Gewohnheiten",
+	"dashboard.customHabits.add": "Hinzufügen",
+	"dashboard.customHabits.empty": "Noch keine benutzerdefinierten Gewohnheiten",
 	"nav.install": "Installieren",
 	"nav.notifications.count.max": "9+",
 
 	// Language messages
 	"language.name.en": "🇺🇸 Englisch",
 	"language.name.de": "🇩🇪 Deutsch",
+	"language.name.ar": "🇸🇦 العربية",
 
 	// Error messages
 	"error.title": "Etwas ist schief gelaufen",
@@ -293,8 +352,8 @@ const deUiMessages = translate(baseUiMessages, {
 	"data.import.dialog.import": "Daten importieren",
 
 	// Splash screen messages
-	"splash.title": "Tilly",
-	"splash.logoAlt": "Tilly-Logo",
+	"splash.title": "Hasiber",
+	"splash.logoAlt": "Hasiber-Logo",
 
 	// Markdown editor messages
 	"markdown.preview": "Vorschau",
@@ -310,6 +369,12 @@ const deUiMessages = translate(baseUiMessages, {
 	"invite.accepting": "Einladung wird angenommen...",
 	"invite.loading.description": "Bitte warte, während wir alles einrichten.",
 	"invite.success": "Du hast jetzt Zugriff auf {$name}",
+	"invite.success.group": "Du bist {$name} beigetreten",
+	"invite.success.copy": "Einladungslink kopiert",
+	"invite.group.title": "Ibaadah-Gruppe teilen",
+	"invite.generate": "Einladungslink erstellen",
+	"invite.link": "Einladungslink",
+	"invite.share": "Teilen",
 	"invite.error.invalid": "Ungültiger Einladungslink",
 	"invite.error.invalid.title": "Ungültiger Einladungslink",
 	"invite.error.invalid.description":

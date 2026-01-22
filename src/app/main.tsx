@@ -8,12 +8,14 @@ import {
 import { UserAccount } from "#shared/schema/user"
 import { routeTree } from "#app/routeTree.gen"
 import { IntlProvider } from "#shared/intl/setup"
-import { messagesDe } from "#shared/intl/messages"
+import { messagesDe, messagesAr, messagesEn } from "#shared/intl/messages"
 import { useSyncUserIdToServiceWorker } from "#app/lib/service-worker"
 import { PWAContext, usePWAProvider } from "#app/lib/pwa"
 import { SplashScreen } from "./components/splash-screen"
 import { Toaster } from "#shared/ui/sonner"
 import { MainErrorBoundary } from "#app/components/main-error-boundary"
+import { useTheme } from "#app/hooks/use-theme"
+import { useEffect } from "react"
 
 export function PWA() {
 	return (
@@ -51,9 +53,7 @@ function JazzWithClerk() {
 
 function RouterWithJazz() {
 	let me = useAccount(UserAccount, { resolve: { root: true } })
-
-	// Only show splash screen if account is still loading
-	if (me.$jazz.loadingState === "loading") return <SplashScreen />
+	useTheme()
 
 	// Pass null for unauthenticated users, me object for authenticated users
 	let contextMe
@@ -65,9 +65,38 @@ function RouterWithJazz() {
 
 	let locale = contextMe?.root?.language || "en"
 
+	useEffect(() => {
+		if (typeof document !== "undefined") {
+			let html = document.documentElement
+			if (locale === "ar") {
+				html.setAttribute("dir", "rtl")
+				html.setAttribute("lang", "ar")
+			} else {
+				html.setAttribute("dir", "ltr")
+				html.setAttribute("lang", locale)
+			}
+		}
+	}, [locale])
+
+	// Only show splash screen if account is still loading
+	if (me.$jazz.loadingState === "loading") return <SplashScreen />
+
 	if (locale === "de") {
 		return (
-			<IntlProvider messages={messagesDe} locale="de">
+			<IntlProvider
+				messages={messagesDe as unknown as typeof messagesEn}
+				locale="de"
+			>
+				<RouterProvider router={router} context={{ me: contextMe }} />
+			</IntlProvider>
+		)
+	}
+	if (locale === "ar") {
+		return (
+			<IntlProvider
+				messages={messagesAr as unknown as typeof messagesEn}
+				locale="ar"
+			>
 				<RouterProvider router={router} context={{ me: contextMe }} />
 			</IntlProvider>
 		)

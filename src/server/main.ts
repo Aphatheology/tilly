@@ -3,6 +3,7 @@ import { cors } from "hono/cors"
 import { logger } from "hono/logger"
 import { chatMessagesApp } from "./features/chat-messages"
 import { cronDeliveryApp } from "./features/push-cron"
+import { ibaadahReminderCronApp } from "./features/ibaadah-reminder-cron"
 import { testNotificationApp } from "./features/push-test"
 import { authMiddleware } from "./lib/auth-middleware"
 
@@ -15,6 +16,7 @@ export let app = new Hono()
 	.use(cors())
 	.route("/push", testNotificationApp)
 	.route("/push", cronDeliveryApp)
+	.route("/push", ibaadahReminderCronApp)
 	.route("/", authenticatedRoutes)
 
 export type AppType = typeof app

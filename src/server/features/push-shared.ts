@@ -5,7 +5,7 @@ import { tryCatch } from "#shared/lib/trycatch"
 import type { co, ResolveQuery } from "jazz-tools"
 import webpush from "web-push"
 import { createIntl } from "@ccssmnn/intl"
-import { messagesEn, messagesDe } from "#shared/intl/messages"
+import { messagesEn, messagesDe, messagesAr } from "#shared/intl/messages"
 
 export {
 	getEnabledDevices,
@@ -14,6 +14,7 @@ export {
 	markNotificationSettingsAsDelivered,
 	settingsQuery,
 	peopleQuery,
+	ibaadahSettingsQuery,
 	getIntl,
 }
 export type {
@@ -22,6 +23,7 @@ export type {
 	LoadedUserAccountSettings,
 	LoadedUserAccountWithPeople,
 	LoadedNotificationSettings,
+	LoadedUserAccountWithIbaadahSettings,
 }
 
 webpush.setVapidDetails(
@@ -63,6 +65,14 @@ let peopleQuery = {
 	},
 } satisfies ResolveQuery<typeof UserAccount>
 
+let ibaadahSettingsQuery = {
+	root: {
+		ibaadahSettings: true,
+		notificationSettings: true,
+	},
+	profile: true,
+} satisfies ResolveQuery<typeof UserAccount>
+
 type LoadedUserAccountSettings = co.loaded<
 	typeof UserAccount,
 	typeof settingsQuery
@@ -70,6 +80,10 @@ type LoadedUserAccountSettings = co.loaded<
 type LoadedUserAccountWithPeople = co.loaded<
 	typeof UserAccount,
 	typeof peopleQuery
+>
+type LoadedUserAccountWithIbaadahSettings = co.loaded<
+	typeof UserAccount,
+	typeof ibaadahSettingsQuery
 >
 type LoadedNotificationSettings = NonNullable<
 	LoadedUserAccountSettings["root"]["notificationSettings"]
@@ -140,6 +154,8 @@ function getIntl(worker: { root: { language?: string } }) {
 
 	if (userLanguage === "de") {
 		return createIntl(messagesDe, "de")
+	} else if (userLanguage === "ar") {
+		return createIntl(messagesAr, "ar")
 	} else {
 		return createIntl(messagesEn, "en")
 	}

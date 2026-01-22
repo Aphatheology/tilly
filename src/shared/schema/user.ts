@@ -1,5 +1,12 @@
 import { Group, co, z, type ResolveQuery } from "jazz-tools"
 import { isBefore, isToday } from "date-fns"
+import type { Theme } from "#shared/types/theme"
+import {
+	IbaadahEntry,
+	IbaadahHabit,
+	IbaadahSettings,
+} from "#shared/schema/ibaadah"
+import { IbaadahGroup } from "#shared/schema/group"
 
 export {
 	isDeleted,
@@ -107,8 +114,15 @@ export let UserAccountRoot = co.map({
 	inactivePeople: co.list(Person).optional(),
 	notificationSettings: NotificationSettings.optional(),
 	usageTracking: UsageTracking.optional(),
-	language: z.enum(["de", "en"]).optional(),
+	language: z.enum(["de", "en", "ar"]).optional(),
+	theme: z
+		.enum(["current", "hasiber", "current-dark", "hasiber-dark"])
+		.optional(),
 	assistant: Assistant.optional(),
+	ibaadahEntries: co.list(IbaadahEntry).optional(),
+	ibaadahHabits: co.list(IbaadahHabit).optional(),
+	ibaadahSettings: IbaadahSettings.optional(),
+	ibaadahGroups: co.list(IbaadahGroup).optional(),
 	migrationVersion: z.number().optional(),
 })
 
@@ -149,6 +163,13 @@ function initializeRootIfUndefined(
 ) {
 	if (account.root === undefined) {
 		let deviceTimezone = Intl.DateTimeFormat().resolvedOptions().timeZone
+		let defaultTheme: Theme = "current"
+		if (typeof window !== "undefined") {
+			let prefersDark = window.matchMedia(
+				"(prefers-color-scheme: dark)",
+			).matches
+			defaultTheme = prefersDark ? "current-dark" : "current"
+		}
 		account.$jazz.set(
 			"root",
 			UserAccountRoot.create({
@@ -160,11 +181,30 @@ function initializeRootIfUndefined(
 					notificationTime: "12:00",
 					pushDevices: [],
 				}),
-				language: navigator.language.startsWith("de") ? "de" : "en",
+				language:
+					typeof navigator !== "undefined"
+						? navigator.language.startsWith("ar")
+							? "ar"
+							: navigator.language.startsWith("de")
+								? "de"
+								: "en"
+						: "en",
+				theme: defaultTheme,
 				assistant: Assistant.create({
 					version: 1,
 					stringifiedMessages: co.list(z.string()).create([]),
 					notifyOnComplete: true,
+				}),
+				ibaadahEntries: co.list(IbaadahEntry).create([]),
+				ibaadahHabits: co.list(IbaadahHabit).create([]),
+				ibaadahSettings: IbaadahSettings.create({
+					version: 1,
+					dailyGoals: {
+						salah: 5,
+						quranPages: 1,
+						dhikrCount: 100,
+					},
+					enableReminders: true,
 				}),
 				migrationVersion: 1,
 			}),
@@ -194,9 +234,35 @@ async function runMigrationV1(
 		},
 	})
 
-	// Initialize inactive lists if missing
 	if (!root.inactivePeople) {
 		root.$jazz.set("inactivePeople", co.list(Person).create([]))
+	}
+
+	if (!root.ibaadahEntries) {
+		root.$jazz.set("ibaadahEntries", co.list(IbaadahEntry).create([]))
+	}
+
+	if (!root.ibaadahHabits) {
+		root.$jazz.set("ibaadahHabits", co.list(IbaadahHabit).create([]))
+	}
+
+	if (!root.ibaadahSettings) {
+		root.$jazz.set(
+			"ibaadahSettings",
+			IbaadahSettings.create({
+				version: 1,
+				dailyGoals: {
+					salah: 5,
+					quranPages: 1,
+					dhikrCount: 100,
+				},
+				enableReminders: true,
+			}),
+		)
+	}
+
+	if (!root.ibaadahGroups) {
+		root.$jazz.set("ibaadahGroups", co.list(IbaadahGroup).create([]))
 	}
 
 	for (let person of root.people.values()) {

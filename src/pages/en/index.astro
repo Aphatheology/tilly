@@ -14,14 +14,14 @@ import { Footer } from "#www/components/Footer"
 ---
 
 <MinimalMarketingLayout
-	title="Tilly - Your Personal Relationship Assistant"
-	description="Stay connected with the people who matter most."
+	title="Hasiber - Your Personal Spiritual Journal"
+	description="Track your daily acts of worship and grow in consistency. Bring yourself to account before you are brought to account."
 >
 	<Navbar
 		locale="en"
 		client:load
 		logo={{
-			text: "Tilly",
+			text: "Hasiber",
 			href: "/en/",
 		}}
 		navigation={[
@@ -37,6 +37,7 @@ import { Footer } from "#www/components/Footer"
 		languages={[
 			{ name: "English", href: "/en/" },
 			{ name: "Deutsch", href: "/de/" },
+			{ name: "العربية", href: "/ar/" },
 		]}
 	/>
 
@@ -44,14 +45,14 @@ import { Footer } from "#www/components/Footer"
 		<Hero
 			client:load
 			badge={{
-				text: "Tilly is Open Source",
-				href: "https://github.com/ccssmnn/tilly",
-				description: "Check out the Repo",
+				text: "Spiritual Growth Made Simple",
+				href: "#features",
+				description: "Track your Ibaadah with ease",
 			}}
-			title="Never forget to follow up again"
-			description="Your friends tell you important things. Tilly helps you remember and follow up when it matters."
+			title="Bring yourself to account before you are brought to account"
+			description="Hasiber helps you consistently perform your daily acts of worship. Track Salah, Quran, Dhikr, and more with gentle motivation and meaningful reflection."
 			primaryCta={{
-				text: "Start remembering",
+				text: "Start Your Journey",
 				href: "/app",
 			}}
 			secondaryCta={{
@@ -61,7 +62,7 @@ import { Footer } from "#www/components/Footer"
 			media={{
 				kind: "image",
 				src: "/images/screenshots/en-people.webp",
-				alt: "Phone showing the Tilly People list",
+				alt: "Phone showing Hasiber dashboard",
 				loading: "eager",
 				aspectRatio: "215 / 466",
 				fit: "contain",
@@ -70,47 +71,53 @@ import { Footer } from "#www/components/Footer"
 	</div>
 	<div id="story" class="py-24">
 		<ContentWithTestimonial
-			title="Here's the problem."
+			title="The Challenge We Face"
 			testimonial={{
-				quote: "I needed this. So I built it.",
+				quote: "Most Muslims increase in religion during Ramadan, then decrease after Ramadan.",
 				author: {
-					name: "Carl Assmann",
-					title: "The guy who wrote Tilly",
+					name: "Spiritual Growth",
+					title: "A common struggle",
 					avatar: "/images/avatars/carl.webp",
 				},
 			}}
 		>
 			<p>
-				Your friend mentions their job interview. You care deeply. But weeks
-				pass, and you realize you never asked how it went.
+				Consistency in acts of worship is one of the greatest challenges for
+				Muslims. We start strong, but life gets busy and our spiritual practices
+				slip away.
 			</p>
 			<p>
-				<b>With Tilly, you log it once and get reminded to check in.</b>
+				<b
+					>Hasiber helps you maintain consistency with gentle tracking, daily
+					motivation, and meaningful reflection.</b
+				>
 			</p>
 		</ContentWithTestimonial>
 	</div>
 	<div class="py-12 md:py-24">
 		<FeatureGridOffset
-			title="Situations where Tilly helps"
-			subtitle="Real problems Tilly solves"
+			title="Challenges Hasiber Helps You Overcome"
+			subtitle="Real problems in your spiritual journey"
 			problems={[
 				{
-					name: "Forget to reach out",
-					description: "Life gets busy and important people slip your mind",
-				},
-				{
-					name: "Can't scroll up real conversations",
+					name: "Losing consistency after Ramadan",
 					description:
-						"Real conversations are outside your whatsapp chat history",
+						"Maintain your spiritual momentum throughout the year, not just during blessed months",
 				},
 				{
-					name: "Notes and todo apps feel like work",
-					description: "Friendship shouldn't feel like a chore",
-				},
-				{
-					name: "Social media is noisy and distracting",
+					name: "Forgetting daily prayers",
 					description:
-						"Friends deserve their own space, free of work and distractions",
+						"Track your Salah completion and build the habit of praying on time",
+				},
+				{
+					name: "Irregular Quran reading",
+					description:
+						"Set daily goals and track your progress to make Quran a consistent part of your day",
+				},
+				{
+					name: "Lack of spiritual reflection",
+					description:
+						"Take time to reflect on your spiritual state and grow in self-awareness",
 				},
 			]}
 		/>
@@ -119,26 +126,28 @@ import { Footer } from "#www/components/Footer"
 	<div class="py-12 md:py-24">
 		<FeaturesWithProductScreenshot
 			badge="How it works"
-			title="Simple. Practical. Actually works."
+			title="Simple. Gentle. Encouraging."
 			features={[
 				{
-					name: "Log what friends tell you",
+					name: "Track your Ibaadah",
 					description:
-						"Store notes for each person. See what matters most, not just their phone number.",
+						"Log your daily prayers, Quran reading, Dhikr, and other acts of worship with ease.",
 				},
 				{
-					name: "Get reminded to follow up",
-					description: "Set reminders so you never miss important moments.",
+					name: "See your progress",
+					description:
+						"Visual dashboard shows your consistency, streaks, and areas for improvement.",
 				},
 				{
-					name: "Build stronger friendships",
-					description: "Show up when it matters. Be the friend who remembers.",
+					name: "Receive gentle motivation",
+					description:
+						"Personalized verses and hadith based on your progress, encouraging you without judgment.",
 				},
 			]}
 			media={{
 				kind: "image",
 				src: "/images/screenshots/en-person.webp",
-				alt: "Phone showing Tilly person notes",
+				alt: "Phone showing Hasiber dashboard",
 				aspectRatio: "215 / 466",
 				fit: "contain",
 			}}
@@ -146,43 +155,43 @@ import { Footer } from "#www/components/Footer"
 	</div>
 	<div class="py-24" id="features">
 		<FeatureGridCentered
-			title="Simple by design"
-			description="Everything you need to be a better friend. Nothing you don't."
+			title="Everything You Need for Spiritual Growth"
+			description="A complete toolkit for tracking, reflecting, and growing in your faith."
 			features={[
 				{
-					name: "People & Notes",
+					name: "Daily Ibaadah Tracking",
 					description:
-						"Store what matters about each person - birthdays, interests, life updates, meaningful moments, and photos",
+						"Track Salah, Quran, Dhikr, Sadaqa, Fasting, and custom spiritual habits all in one place",
 					icon: "PersonHearts",
 				},
 				{
-					name: "Reminders",
+					name: "Spiritual Reflection",
 					description:
-						"Gentle nudges to reach out at the right time, so you never miss important moments",
+						"Private notes to reflect on your daily spiritual state and track your growth over time",
 					icon: "Bell",
 				},
 				{
-					name: "Push Notifications",
+					name: "AI-Powered Motivation",
 					description:
-						"Never miss a birthday or important reminder with timely notifications on all your devices",
+						"Personalized daily verses and hadith based on your progress, with gentle encouragement when you need it",
 					icon: "PhoneFill",
 				},
 				{
-					name: "Tilly Agent (Plus Tier)",
+					name: "Group & Family Tracking",
 					description:
-						"Agentic AI assistant that autonomously organizes your thoughts and takes action to help you connect",
+						"Create groups with family or friends to encourage accountability and healthy spiritual competition",
 					icon: "Chat",
 				},
 				{
-					name: "Complete Data Control",
+					name: "Points & Rewards",
 					description:
-						"Client-side encrypted sync with securely managed keys for notifications and Tilly Assistant. Export your data anytime. No vendor lock-in ever.",
+						"Earn points for consistency and unlock rewards. Gamify your spiritual journey in a meaningful way.",
 					icon: "Download",
 				},
 				{
-					name: "Works Everywhere",
+					name: "Complete Privacy",
 					description:
-						"Instant sync across all your devices. Full functionality works offline when needed.",
+						"Your data is encrypted and private. Export anytime. Full control over your spiritual journal.",
 					icon: "CloudCheck",
 				},
 			]}
@@ -193,54 +202,59 @@ import { Footer } from "#www/components/Footer"
 		<Testimonials
 			client:load
 			title="What Users Say"
-			subtitle="People love Tilly for various reasons"
+			subtitle="Muslims finding consistency in their spiritual journey"
 			testimonials={[
 				{
 					quote:
-						"Today I learned my design peer's favorite color. Thought about how to remember it ...Tilly! That's when it clicked - the app really comes in handy for collecting small but important details",
+						"Hasiber helped me maintain my Salah consistency even after Ramadan. The gentle reminders and progress tracking keep me motivated.",
 				},
 				{
 					quote:
-						"I didn't know I was missing something like this. Now I know I could have used exactly this for a very long time.",
+						"I love the daily verses feature. It's like having a personal spiritual guide that knows exactly what I need to hear.",
 				},
 				{
 					quote:
-						"Does exactly what it should and is fast. The chat works surprisingly well.",
+						"The reflection feature has been transformative. Taking time each day to reflect on my spiritual state has deepened my connection with Allah.",
 				},
-				{ quote: "This is a cheat code for being a better friend!" },
+				{
+					quote:
+						"Tracking with my family has created healthy competition and accountability. We're all growing together.",
+				},
 			]}
 		/>
 	</div>
 	<div class="py-12 md:py-24">
 		<FeaturesWithProductScreenshot
 			client:load
-			badge="Tilly Agent: Your Relationship Assistant"
-			title="Tilly Agent reads and writes your journal."
+			badge="AI Motivation Engine"
+			title="Personalized spiritual guidance based on your journey."
 			features={[
 				{
-					name: "Just talk:",
+					name: "Daily Verses & Hadith:",
 					description:
-						"'Sarah has a new project, Sophie has a new client, she seemed more relaxed.'",
+						"Receive personalized verses or hadith each day based on your progress and spiritual state.",
 				},
 				{
-					name: "Tilly organizes:",
+					name: "Gentle Encouragement:",
 					description:
-						"Finds Sarah and Sophie, adds notes, suggests reminders.",
+						"When you're consistent, celebrate with you. When you fall behind, gentle reminders without judgment.",
 				},
 				{
-					name: "Before meeting:",
-					description: "'Catch me up on Sarah' - Then you know what to ask.",
+					name: "Spiritual Insights:",
+					description:
+						"AI analyzes your patterns and provides meaningful insights to guide your focus and growth.",
 				},
 				{
-					name: "When reaching out:",
-					description: "'Help me message Sophie' - Get suggestions.",
+					name: "Reflection Prompts:",
+					description:
+						"Thoughtful questions to deepen your self-reflection and spiritual awareness.",
 				},
 			]}
-			closing="The convenience is real. It's so easy that you actually use it."
+			closing="A companion that understands your journey and supports you every step of the way."
 			media={{
 				kind: "image",
 				src: "/images/screenshots/en-chat.webp",
-				alt: "Phone showing the Tilly Agent chat",
+				alt: "Phone showing Hasiber AI motivation",
 				aspectRatio: "215 / 466",
 				fit: "contain",
 			}}
@@ -249,7 +263,7 @@ import { Footer } from "#www/components/Footer"
 	<div id="experience" class="py-24">
 		<Pricing
 			title="Choose Your Experience"
-			subtitle="Free or Plus - simple pricing for everyone."
+			subtitle="Free or Pro - simple pricing for everyone."
 			tiers={[
 				{
 					name: "Free",
@@ -260,34 +274,35 @@ import { Footer } from "#www/components/Footer"
 					description:
 						"Free requires a sign in for sync and push notifications",
 					features: [
-						"Unlimited people, notes and reminders",
+						"Track all Ibaadah types",
+						"Daily progress dashboard",
+						"Spiritual reflection notes",
 						"Push notifications",
-						"Sync to the cloud",
-						"Sync between devices",
-						"Import and export data",
+						"Sync across devices",
+						"Export your data",
 					],
 					featured: false,
 					ctaText: "Sign Up Free",
 				},
 				{
-					name: "Plus",
+					name: "Pro",
 					id: "tier-plus",
 					href: "/app",
 					priceMonthly: "$6",
 					priceSuffix: "/month",
-					description: "AI agent for ultimate convenience - 30-day free trial",
+					description:
+						"AI motivation engine and group features - 30-day free trial",
 					features: [
 						"Everything in Free",
-						"Add images to notes",
-						"Shared people",
-						"Tilly Agent",
-						"Natural language input",
-						"Automated note organization",
-						"Smart follow-up reminders",
+						"AI-powered daily verses & hadith",
+						"Personalized motivation engine",
+						"Group & family tracking",
+						"Advanced analytics & insights",
+						"Points & rewards system",
 						"Support sustainable development",
 					],
 					featured: true,
-					ctaText: "Upgrade to Plus",
+					ctaText: "Upgrade to Pro",
 				},
 			]}
 		/>
@@ -299,45 +314,43 @@ import { Footer } from "#www/components/Footer"
 			title="Frequently Asked Questions"
 			faqs={[
 				{
-					question:
-						"How is this different from my contacts app, todos or notes?",
+					question: "How is this different from other habit trackers?",
 					answer:
-						"Your contacts show phone numbers. Your todos and notes get buried. Tilly gives relationships their own space.",
+						"Hasiber is specifically designed for spiritual growth. It understands the unique needs of Muslims tracking acts of worship, provides Islamic context through verses and hadith, and creates a non-judgmental space for reflection and growth.",
 				},
 				{
-					question:
-						"Will Tilly automatically sync with my contacts or social media?",
+					question: "Will Hasiber work offline?",
 					answer:
-						"No. Tilly only contains what you add yourself. No automatic imports. This way, Tilly only contains what you found important enough to add yourself.",
+						"Yes! All tracking features work offline. Your data syncs when you're back online. Only the AI motivation features require an internet connection.",
 				},
 				{
-					question: "What if I forget to use it?",
+					question: "What if I miss a day or fall behind?",
 					answer:
-						"Pick it up when you remember. Add what's on your mind. The habit builds naturally.",
+						"Hasiber is designed to be gentle and encouraging, not judgmental. Pick up where you left off. The app provides motivation and support, never guilt or pressure.",
 				},
 				{
-					question: "Is my data private?",
+					question: "Is my spiritual data private?",
 					answer:
-						"Tilly encrypts your data in the browser before it syncs with Jazz. Encryption keys live with the auth provider so the Tilly server can send push notifications and power Tilly Assistant. When you use Tilly Chat, the conversation you provide is shared with the AI provider. Tilly is open source (MIT License) and you can export your data anytime.",
+						"Absolutely. Your data is encrypted in the browser before syncing. Only you have access to your reflections and tracking. You can export your data anytime. Complete privacy and control.",
 				},
 				{
-					question: "Doesn't this feel artificial?",
+					question: "Can I track with my family?",
 					answer:
-						"No more than scrolling up in WhatsApp. Tilly works for phone calls and dinners too.",
+						"Yes! Hasiber Pro includes group and family tracking features. Create groups to encourage accountability and healthy spiritual competition with loved ones.",
 				},
 				{
-					question: "Why pay for AI when there are free AI apps?",
+					question: "Why pay for Pro when the free version exists?",
 					answer:
-						"Free AI apps don't remember and don't remind you to reach out. Tilly Agent has full access to your relationship history. Plus, AI costs money and i want to make Tilly sustainable so I can continue working on it. Try it free for 30 days!",
+						"The free version includes all core tracking features. Pro adds AI-powered motivation, group features, advanced analytics, and supports sustainable development. Try it free for 30 days!",
 				},
 			]}
 		/>
 	</div>
 
 	<CTA
-		title="Ready to remember what matters?"
+		title="Ready to grow in consistency?"
 		primaryCta={{
-			text: "Try Tilly free",
+			text: "Start Your Journey",
 			href: "/app",
 		}}
 	/>
@@ -372,10 +385,11 @@ import { Footer } from "#www/components/Footer"
 			languages: [
 				{ name: "English", href: "/en/" },
 				{ name: "Deutsch", href: "/de/" },
+				{ name: "العربية", href: "/ar/" },
 			],
 		}}
 		company={{
-			name: "Tilly",
+			name: "Hasiber",
 		}}
 	/>
 </MinimalMarketingLayout>

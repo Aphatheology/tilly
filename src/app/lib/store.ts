@@ -202,7 +202,7 @@ export let useAppStore = create<AppState>()(
 			lastAccessDate: format(new Date(), "yyyy-MM-dd"),
 		}),
 		{
-			name: "tilly-app-storage",
+			name: "hasiber-app-storage",
 			storage: createIdbStorage(storeStateSchema, initialPersistedState),
 			partialize: (state): PersistedState => ({
 				pwaInstallHintDismissed: false,

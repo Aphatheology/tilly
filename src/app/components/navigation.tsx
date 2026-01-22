@@ -15,6 +15,8 @@ import {
 	AppIndicator,
 	FileEarmarkText,
 	FileEarmarkTextFill,
+	Calendar,
+	CalendarFill,
 } from "react-bootstrap-icons"
 import { cn } from "#app/lib/utils"
 import { useInputFocusState } from "#app/hooks/use-input-focus-state"
@@ -80,6 +82,14 @@ function Navigation({ dueReminderCount }: { dueReminderCount: number }) {
 						"md:h-12 md:gap-1 md:p-1",
 					)}
 				>
+					<NavBarButton
+						key="/dashboard"
+						to="/dashboard"
+						label={<T k="nav.dashboard" />}
+						onClick={() => handleNavClick("/dashboard")}
+						activeIcon={CalendarFill}
+						inactiveIcon={Calendar}
+					/>
 					<NavBarButton
 						key="/people"
 						to="/people"

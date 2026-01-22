@@ -238,7 +238,9 @@ function WelcomeStep() {
 				<EmptyMedia variant="icon">
 					<Stars />
 				</EmptyMedia>
-				<EmptyTitle>Welcome to Tilly</EmptyTitle>
+				<EmptyTitle>
+					<T k="welcome.title" />
+				</EmptyTitle>
 				<EmptyDescription>
 					<T k="welcome.description" />
 				</EmptyDescription>
