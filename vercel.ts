@@ -16,7 +16,7 @@ export let config: VercelConfig = {
 	crons: [
 		{
 			path: "/api/push/deliver-notifications",
-			schedule: "0 * * * *",
+			schedule: "0 9 * * *",
 		},
 	],
 }
