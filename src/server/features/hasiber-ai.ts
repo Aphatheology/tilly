@@ -26,25 +26,28 @@ let hasiberAiApp = new Hono()
 		let root = account.root
 		if (!root) return c.json({ error: "account root missing" }, 500)
 
-	let today = new Date()
-	let todayKey = toISODate(today)
-	let entries = Array.from(root.ibaadahEntries?.values() || []).filter(
-		(e): e is Loaded<typeof IbaadahEntry> =>
-			Boolean(e && e.$isLoaded),
-	)
-	let reflections = Array.from(root.reflections?.values() || []).filter(
-		(r): r is Loaded<typeof Reflection> =>
-			Boolean(r && r.$isLoaded),
-	)
+		let today = new Date()
+		let todayKey = toISODate(today)
+		let entries = Array.from(root.ibaadahEntries?.values() || []).filter(
+			(e): e is Loaded<typeof IbaadahEntry> => Boolean(e && e.$isLoaded),
+		)
+		let reflections = Array.from(root.reflections?.values() || []).filter(
+			(r): r is Loaded<typeof Reflection> => Boolean(r && r.$isLoaded),
+		)
 
-		let recentEntries = entries.filter(e => e.date >= getDateNDaysAgo(todayKey, 30))
+		let recentEntries = entries.filter(
+			e => e.date >= getDateNDaysAgo(todayKey, 30),
+		)
 		let stats = computeIbaadahStats(recentEntries, todayKey)
 
 		let latestReflection = reflections
 			.filter(r => r.date <= todayKey)
 			.sort((a, b) => (a.date < b.date ? 1 : a.date > b.date ? -1 : 0))[0]
 
-		let inspiration = getDailyInspiration(today, latestReflection?.mood as ReflectionMood | undefined)
+		let inspiration = getDailyInspiration(
+			today,
+			latestReflection?.mood as ReflectionMood | undefined,
+		)
 
 		let message = buildMotivationMessage({
 			streak: stats.currentStreak,
@@ -85,21 +88,16 @@ let hasiberAiApp = new Hono()
 				: getDateNDaysAgo(todayKey, 30)
 
 		let entries = Array.from(root.ibaadahEntries?.values() || [])
-			.filter(
-				(e): e is Loaded<typeof IbaadahEntry> =>
-					Boolean(e && e.$isLoaded),
+			.filter((e): e is Loaded<typeof IbaadahEntry> =>
+				Boolean(e && e.$isLoaded),
 			)
 			.filter(e => e.date >= startKey && e.date <= todayKey)
 		let reflections = Array.from(root.reflections?.values() || [])
-			.filter(
-				(r): r is Loaded<typeof Reflection> =>
-					Boolean(r && r.$isLoaded),
-			)
+			.filter((r): r is Loaded<typeof Reflection> => Boolean(r && r.$isLoaded))
 			.filter(r => r.date >= startKey && r.date <= todayKey)
 		let pointsHistory = Array.from(root.pointsHistory?.values() || [])
-			.filter(
-				(p): p is Loaded<typeof PointsHistory> =>
-					Boolean(p && p.$isLoaded),
+			.filter((p): p is Loaded<typeof PointsHistory> =>
+				Boolean(p && p.$isLoaded),
 			)
 			.filter(p => p.date >= startKey && p.date <= todayKey)
 
@@ -122,7 +120,6 @@ let motivationResolveQuery = {
 		pointsHistory: { $each: true },
 	},
 } as const satisfies ResolveQuery<typeof UserAccount>
-
 
 function toISODate(d: Date): string {
 	return d.toISOString().slice(0, 10)
@@ -191,12 +188,12 @@ function computeIbaadahStats(
 		}
 	}
 	let daysWithEntries = last7Keys.filter(k => byDate.has(k)).length
-	let consistency7 = last7Keys.length === 0 ? 0 : daysWithEntries / last7Keys.length
+	let consistency7 =
+		last7Keys.length === 0 ? 0 : daysWithEntries / last7Keys.length
 
 	let recent3 = last7Keys.slice(-3).filter(k => byDate.has(k)).length
 	let prev3 = last7Keys.slice(0, 3).filter(k => byDate.has(k)).length
-	let trend: Trend =
-		recent3 > prev3 ? "up" : recent3 < prev3 ? "down" : "flat"
+	let trend: Trend = recent3 > prev3 ? "up" : recent3 < prev3 ? "down" : "flat"
 
 	return {
 		currentStreak,
@@ -217,35 +214,55 @@ function buildMotivationMessage(input: {
 	let parts: string[] = []
 
 	if (input.streak >= 5) {
-		parts.push(`You are on a ${input.streak}-day streak. Keep this beautiful consistency going.`)
+		parts.push(
+			`You are on a ${input.streak}-day streak. Keep this beautiful consistency going.`,
+		)
 	} else if (input.streak >= 1) {
-		parts.push(`You have started a ${input.streak}-day streak. This is a great time to build the habit.`)
+		parts.push(
+			`You have started a ${input.streak}-day streak. This is a great time to build the habit.`,
+		)
 	} else {
 		parts.push("Today is a fresh page. Even one small act of worship counts.")
 	}
 
 	if (input.consistency7 >= 0.8) {
-		parts.push("Over the last week you were consistent on most days. May Allah keep you firm.")
+		parts.push(
+			"Over the last week you were consistent on most days. May Allah keep you firm.",
+		)
 	} else if (input.consistency7 >= 0.4) {
-		parts.push("Your last week had a mix of active and quiet days. Choose one small action to anchor today.")
+		parts.push(
+			"Your last week had a mix of active and quiet days. Choose one small action to anchor today.",
+		)
 	} else {
-		parts.push("The last days were lighter. Starting again with a single sincere act is already success.")
+		parts.push(
+			"The last days were lighter. Starting again with a single sincere act is already success.",
+		)
 	}
 
 	if (input.trend === "up") {
-		parts.push("Your recent days show an upward trend compared to the start of the week.")
+		parts.push(
+			"Your recent days show an upward trend compared to the start of the week.",
+		)
 	} else if (input.trend === "down") {
-		parts.push("Things slowed down a bit recently. Returning with humility is itself an act of worship.")
+		parts.push(
+			"Things slowed down a bit recently. Returning with humility is itself an act of worship.",
+		)
 	}
 
 	if (input.mood === "stressed" || input.mood === "sad") {
-		parts.push("Lean on short, gentle acts today: a sincere du'a, a few verses, or simple morning adhkaar.")
+		parts.push(
+			"Lean on short, gentle acts today: a sincere du'a, a few verses, or simple morning adhkaar.",
+		)
 	} else if (input.mood === "grateful" || input.mood === "happy") {
-		parts.push("Channel your gratitude into a little extra: a voluntary rak'ah, a page of Qur'an, or quiet dhikr.")
+		parts.push(
+			"Channel your gratitude into a little extra: a voluntary rak'ah, a page of Qur'an, or quiet dhikr.",
+		)
 	}
 
 	if (!input.hasReflectionToday) {
-		parts.push("After your Ibaadah today, write a short reflection so future you can remember how this day felt.")
+		parts.push(
+			"After your Ibaadah today, write a short reflection so future you can remember how this day felt.",
+		)
 	}
 
 	return parts.join(" ")
@@ -287,7 +304,8 @@ function buildInsights(input: {
 	let pointsTotal = input.pointsHistory.reduce((sum, p) => sum + p.amount, 0)
 	let pointsByCategory: Record<string, number> = {}
 	for (let p of input.pointsHistory) {
-		pointsByCategory[p.category] = (pointsByCategory[p.category] || 0) + p.amount
+		pointsByCategory[p.category] =
+			(pointsByCategory[p.category] || 0) + p.amount
 	}
 
 	let byDate = new Map<string, number>()
@@ -312,4 +330,3 @@ function buildInsights(input: {
 		bestDay,
 	}
 }
-

@@ -1,13 +1,16 @@
-import {
-	createFileRoute,
-	Link,
-} from "@tanstack/react-router"
+import { createFileRoute, Link } from "@tanstack/react-router"
 import { useAccount } from "jazz-tools/react"
 import { UserAccount } from "#shared/schema/user"
 import type { ResolveQuery, Loaded } from "jazz-tools"
 import { PageHeader } from "#app/components/page-header"
 import { Button } from "#app/components/ui/button"
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "#app/components/ui/card"
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+	CardDescription,
+} from "#app/components/ui/card"
 import { PointsBadge } from "#app/components/points/PointsBadge"
 import { ReflectionEditor } from "#app/features/reflection/ReflectionEditor"
 import { usePoints } from "#app/features/points/use-points"
@@ -34,8 +37,7 @@ function DashboardPage() {
 		if (!me.$isLoaded || !me.root?.reflections) return false
 		const today = new Date().toISOString().split("T")[0]
 		let reflections = Array.from(me.root.reflections.values()).filter(
-			(r): r is Loaded<typeof Reflection> =>
-				Boolean(r && r.$isLoaded),
+			(r): r is Loaded<typeof Reflection> => Boolean(r && r.$isLoaded),
 		)
 		return reflections.some(r => r.date === today && r.content)
 	})
@@ -77,7 +79,9 @@ function DashboardPage() {
 				<Card className="col-span-full md:col-span-2 lg:col-span-2">
 					<CardHeader>
 						<CardTitle>Today&apos;s Ibaadah</CardTitle>
-						<CardDescription>Keep up your spiritual consistency.</CardDescription>
+						<CardDescription>
+							Keep up your spiritual consistency.
+						</CardDescription>
 					</CardHeader>
 					<CardContent>
 						<div className="flex flex-col gap-4">
@@ -112,7 +116,7 @@ function DashboardPage() {
 					</CardHeader>
 					<CardContent>
 						<div className="text-3xl font-bold">{balance} Pts</div>
-						<p className="text-sm text-muted-foreground mt-2">
+						<p className="text-muted-foreground mt-2 text-sm">
 							You&apos;re doing great!
 						</p>
 					</CardContent>
@@ -122,7 +126,9 @@ function DashboardPage() {
 			{/* Daily Reflection Section */}
 			<section className="space-y-4">
 				<div className="flex items-center justify-between">
-					<h2 className="text-2xl font-bold tracking-tight">Daily Reflection</h2>
+					<h2 className="text-2xl font-bold tracking-tight">
+						Daily Reflection
+					</h2>
 					<Button asChild variant="ghost" size="sm">
 						<a href="/app/reflections">
 							View All
@@ -130,7 +136,7 @@ function DashboardPage() {
 						</a>
 					</Button>
 				</div>
-				
+
 				<Card className="bg-muted/30">
 					<CardContent className="pt-6">
 						{todaysReflection ? (
@@ -138,7 +144,9 @@ function DashboardPage() {
 								<div className="rounded-full bg-green-100 p-3">
 									<CheckCircle className="h-6 w-6 text-green-600" />
 								</div>
-								<h3 className="mt-4 text-lg font-semibold">Reflection Completed</h3>
+								<h3 className="mt-4 text-lg font-semibold">
+									Reflection Completed
+								</h3>
 								<p className="text-muted-foreground">
 									You&apos;ve captured your thoughts for today. MashaAllah!
 								</p>
@@ -149,7 +157,7 @@ function DashboardPage() {
 						) : (
 							<ReflectionEditor
 								onSubmit={handleReflectionSubmit}
-								onCancel={() => {}} 
+								onCancel={() => {}}
 							/>
 						)}
 					</CardContent>

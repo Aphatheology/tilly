@@ -93,7 +93,9 @@ function IbaadahEntryListItem({
 					if (entry.value.unit === "suurah") {
 						let surahParts = entry.value.values.map(v => {
 							let surah = getSurahByNumber(v)
-							return surah ? `${surah.number}. ${surah.nameArabic}` : `Surah ${v}`
+							return surah
+								? `${surah.number}. ${surah.nameArabic}`
+								: `Surah ${v}`
 						})
 						parts.push(...surahParts)
 					} else if (entry.value.unit === "jizu") {
@@ -294,7 +296,9 @@ function IbaadahEntryListItem({
 							quranMinutes:
 								entry.value.type === "quran" ? entry.value.minutes : undefined,
 							adhkaarIds:
-								entry.value.type === "dhikr" ? entry.value.adhkaarIds : undefined,
+								entry.value.type === "dhikr"
+									? entry.value.adhkaarIds
+									: undefined,
 							customDhikr:
 								entry.value.type === "dhikr"
 									? entry.value.customDhikr
@@ -324,7 +328,12 @@ function IbaadahEntryListItem({
 									? Array.isArray(entry.value.customNawaafil)
 										? entry.value.customNawaafil
 										: typeof entry.value.customNawaafil === "string"
-											? [{ name: entry.value.customNawaafil, rakaat: entry.value.rakaat }]
+											? [
+													{
+														name: entry.value.customNawaafil,
+														rakaat: entry.value.rakaat,
+													},
+												]
 											: []
 									: undefined,
 							customValue:

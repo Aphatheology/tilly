@@ -1,6 +1,11 @@
 import { usePoints } from "#app/features/points/use-points"
 import { PageHeader } from "#app/components/page-header"
-import { Card, CardContent, CardHeader, CardTitle } from "#app/components/ui/card"
+import {
+	Card,
+	CardContent,
+	CardHeader,
+	CardTitle,
+} from "#app/components/ui/card"
 import { format } from "date-fns"
 import {
 	Table,
@@ -11,16 +16,24 @@ import {
 	TableRow,
 } from "#shared/ui/table"
 import type { Loaded } from "jazz-tools"
+import { createFileRoute } from "@tanstack/react-router"
 import { PointsHistory } from "#shared/schema/points"
 
-export default function PointsPage() {
+export const Route = createFileRoute("/_app/points")({
+	component: PointsPage,
+})
+
+function PointsPage() {
 	const { balance, history } = usePoints()
 
-	const sortedHistory = history && history.$isLoaded
-		? Array.from(history.values())
-			.filter((e): e is Loaded<typeof PointsHistory> => Boolean(e && e.$isLoaded))
-			.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
-		: []
+	const sortedHistory =
+		history && history.$isLoaded
+			? Array.from(history.values())
+					.filter((e): e is Loaded<typeof PointsHistory> =>
+						Boolean(e && e.$isLoaded),
+					)
+					.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+			: []
 
 	return (
 		<div className="space-y-8">
@@ -37,7 +50,7 @@ export default function PointsPage() {
 					</CardHeader>
 					<CardContent>
 						<div className="text-2xl font-bold">{balance}</div>
-						<p className="text-xs text-muted-foreground">
+						<p className="text-muted-foreground text-xs">
 							Keep up the consistency!
 						</p>
 					</CardContent>
@@ -76,7 +89,7 @@ export default function PointsPage() {
 								<TableRow>
 									<TableCell
 										colSpan={4}
-										className="h-24 text-center text-muted-foreground"
+										className="text-muted-foreground h-24 text-center"
 									>
 										No points yet. Start logging Ibaadah!
 									</TableCell>

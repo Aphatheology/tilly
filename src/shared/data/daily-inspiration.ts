@@ -48,7 +48,10 @@ let inspirations: Inspiration[] = [
 	},
 ]
 
-export function getDailyInspiration(date: Date, mood?: ReflectionMood): Inspiration {
+export function getDailyInspiration(
+	date: Date,
+	mood?: ReflectionMood,
+): Inspiration {
 	let candidates = inspirations
 	if (mood) {
 		let tagged = inspirations.filter(i => i.tags && i.tags.includes(mood))
@@ -65,4 +68,3 @@ function getDayOfYear(date: Date): number {
 	let oneDay = 1000 * 60 * 60 * 24
 	return Math.floor(diff / oneDay)
 }
-

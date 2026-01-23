@@ -31,9 +31,16 @@ import {
 	getSurahByNumber,
 	type QuranUnit,
 } from "#shared/data/quran-data"
-import { getAdhkaarByCategory, type AdhkaarCategory } from "#shared/data/adhkaar-data"
+import {
+	getAdhkaarByCategory,
+	type AdhkaarCategory,
+} from "#shared/data/adhkaar-data"
 import { nawaafil } from "#shared/data/nawaafil-data"
-import { isRamadan, isMondayOrThursday, isAyyaamulBeed } from "#shared/lib/lunar-calendar"
+import {
+	isRamadan,
+	isMondayOrThursday,
+	isAyyaamulBeed,
+} from "#shared/lib/lunar-calendar"
 import { useAccount } from "jazz-tools/react"
 import { UserAccount } from "#shared/schema/user"
 import {
@@ -131,7 +138,12 @@ function IbaadahForm({
 }) {
 	let t = useIntl()
 	let me = useAccount(UserAccount, {
-		resolve: { root: { customNawaafilTemplates: { $each: true }, customDhikrTemplates: { $each: true } } },
+		resolve: {
+			root: {
+				customNawaafilTemplates: { $each: true },
+				customDhikrTemplates: { $each: true },
+			},
+		},
 	})
 	let formSchema = createIbaadahFormSchema(t)
 	let form = useForm({
@@ -201,10 +213,12 @@ function IbaadahForm({
 												<Button
 													key={typeValue}
 													type="button"
-													variant={field.value === typeValue ? "default" : "outline"}
+													variant={
+														field.value === typeValue ? "default" : "outline"
+													}
 													size="sm"
 													onClick={() => field.onChange(typeValue)}
-													className="text-xs hover:text-foreground"
+													className="hover:text-foreground text-xs"
 												>
 													<T k={`ibaadah.form.type.${typeValue}`} />
 												</Button>
@@ -212,18 +226,22 @@ function IbaadahForm({
 										)}
 									</div>
 									<div className="flex flex-wrap gap-2">
-										{(["fasting", "sadaqa", "custom"] as const).map(typeValue => (
-											<Button
-												key={typeValue}
-												type="button"
-												variant={field.value === typeValue ? "default" : "outline"}
-												size="sm"
-												onClick={() => field.onChange(typeValue)}
-												className="text-xs"
-											>
-												<T k={`ibaadah.form.type.${typeValue}`} />
-											</Button>
-										))}
+										{(["fasting", "sadaqa", "custom"] as const).map(
+											typeValue => (
+												<Button
+													key={typeValue}
+													type="button"
+													variant={
+														field.value === typeValue ? "default" : "outline"
+													}
+													size="sm"
+													onClick={() => field.onChange(typeValue)}
+													className="text-xs"
+												>
+													<T k={`ibaadah.form.type.${typeValue}`} />
+												</Button>
+											),
+										)}
 									</div>
 								</div>
 							</FormControl>
@@ -260,7 +278,13 @@ function IbaadahForm({
 						control={form.control}
 						name="salahPrayers"
 						render={({ field }) => {
-							let allPrayers = ["fajr", "dhuhr", "asr", "maghrib", "isha"] as const
+							let allPrayers = [
+								"fajr",
+								"dhuhr",
+								"asr",
+								"maghrib",
+								"isha",
+							] as const
 							let allSelected =
 								field.value?.length === allPrayers.length &&
 								allPrayers.every(p => field.value?.includes(p))
@@ -286,7 +310,7 @@ function IbaadahForm({
 												/>
 												<label
 													htmlFor="select-all-prayers"
-													className="text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+													className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 												>
 													<T k="ibaadah.form.salah.selectAll" />
 												</label>
@@ -372,12 +396,17 @@ function IbaadahForm({
 											<T k="ibaadah.form.quran.suurah.label" />
 										</FormLabel>
 										<FormControl>
-											<div className="space-y-2 max-h-60 overflow-y-auto">
+											<div className="max-h-60 space-y-2 overflow-y-auto">
 												{surahs.map(surah => (
-													<div key={surah.number} className="flex items-center gap-2">
+													<div
+														key={surah.number}
+														className="flex items-center gap-2"
+													>
 														<Checkbox
 															id={`surah-${surah.number}`}
-															checked={field.value?.includes(surah.number) || false}
+															checked={
+																field.value?.includes(surah.number) || false
+															}
 															onCheckedChange={checked => {
 																let current = field.value || []
 																if (checked) {
@@ -414,15 +443,20 @@ function IbaadahForm({
 											<T k="ibaadah.form.quran.jizu.label" />
 										</FormLabel>
 										<FormControl>
-											<div className="space-y-2 max-h-60 overflow-y-auto">
+											<div className="max-h-60 space-y-2 overflow-y-auto">
 												{juzs.map(juz => {
 													let startSurah = getSurahByNumber(juz.startSurah)
 													let endSurah = getSurahByNumber(juz.endSurah)
 													return (
-														<div key={juz.number} className="flex items-center gap-2">
+														<div
+															key={juz.number}
+															className="flex items-center gap-2"
+														>
 															<Checkbox
 																id={`juz-${juz.number}`}
-																checked={field.value?.includes(juz.number) || false}
+																checked={
+																	field.value?.includes(juz.number) || false
+																}
 																onCheckedChange={checked => {
 																	let current = field.value || []
 																	if (checked) {
@@ -438,7 +472,10 @@ function IbaadahForm({
 																htmlFor={`juz-${juz.number}`}
 																className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 															>
-																Juz {juz.number}: {startSurah?.nameArabic} {juz.startVerse} - {endSurah?.nameArabic} {juz.endVerse} (Pages {juz.startPage}-{juz.endPage})
+																Juz {juz.number}: {startSurah?.nameArabic}{" "}
+																{juz.startVerse} - {endSurah?.nameArabic}{" "}
+																{juz.endVerse} (Pages {juz.startPage}-
+																{juz.endPage})
 															</label>
 														</div>
 													)
@@ -460,15 +497,20 @@ function IbaadahForm({
 											<T k="ibaadah.form.quran.hizbu.label" />
 										</FormLabel>
 										<FormControl>
-											<div className="space-y-2 max-h-60 overflow-y-auto">
+											<div className="max-h-60 space-y-2 overflow-y-auto">
 												{hizbs.map(hizb => {
 													let startSurah = getSurahByNumber(hizb.startSurah)
 													let endSurah = getSurahByNumber(hizb.endSurah)
 													return (
-														<div key={hizb.number} className="flex items-center gap-2">
+														<div
+															key={hizb.number}
+															className="flex items-center gap-2"
+														>
 															<Checkbox
 																id={`hizb-${hizb.number}`}
-																checked={field.value?.includes(hizb.number) || false}
+																checked={
+																	field.value?.includes(hizb.number) || false
+																}
 																onCheckedChange={checked => {
 																	let current = field.value || []
 																	if (checked) {
@@ -484,7 +526,10 @@ function IbaadahForm({
 																htmlFor={`hizb-${hizb.number}`}
 																className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 															>
-																Hizb {hizb.number}: {startSurah?.nameArabic} {hizb.startVerse} - {endSurah?.nameArabic} {hizb.endVerse} (Pages {hizb.startPage}-{hizb.endPage})
+																Hizb {hizb.number}: {startSurah?.nameArabic}{" "}
+																{hizb.startVerse} - {endSurah?.nameArabic}{" "}
+																{hizb.endVerse} (Pages {hizb.startPage}-
+																{hizb.endPage})
 															</label>
 														</div>
 													)
@@ -516,7 +561,9 @@ function IbaadahForm({
 													}
 													onChange={e =>
 														field.onChange(
-															e.target.value ? Number(e.target.value) : undefined,
+															e.target.value
+																? Number(e.target.value)
+																: undefined,
 														)
 													}
 												/>
@@ -542,7 +589,9 @@ function IbaadahForm({
 													}
 													onChange={e =>
 														field.onChange(
-															e.target.value ? Number(e.target.value) : undefined,
+															e.target.value
+																? Number(e.target.value)
+																: undefined,
 														)
 													}
 												/>
@@ -568,44 +617,55 @@ function IbaadahForm({
 									</FormLabel>
 									<FormControl>
 										<div className="space-y-2">
-											{(["morning", "evening"] as AdhkaarCategory[]).map(category => {
-												let categoryAdhkaar = getAdhkaarByCategory(category)
-												let categoryKey = `dhikr-${category}`
-												return (
-													<div key={category} className="flex items-center gap-2">
-														<Checkbox
-															id={categoryKey}
-															checked={
-																categoryAdhkaar.every(adhkar =>
-																	field.value?.includes(adhkar.id),
-																) || false
-															}
-															onCheckedChange={checked => {
-																let current = field.value || []
-																if (checked) {
-																	let allIds = categoryAdhkaar.map(a => a.id)
-																	let newIds = [
-																		...current.filter(id => !allIds.includes(id)),
-																		...allIds,
-																	]
-																	field.onChange(newIds)
-																} else {
-																	let allIds = categoryAdhkaar.map(a => a.id)
-																	field.onChange(
-																		current.filter(id => !allIds.includes(id)),
-																	)
-																}
-															}}
-														/>
-														<label
-															htmlFor={categoryKey}
-															className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+											{(["morning", "evening"] as AdhkaarCategory[]).map(
+												category => {
+													let categoryAdhkaar = getAdhkaarByCategory(category)
+													let categoryKey = `dhikr-${category}`
+													return (
+														<div
+															key={category}
+															className="flex items-center gap-2"
 														>
-															<T k={`ibaadah.form.dhikr.category.${category}`} />
-														</label>
-													</div>
-												)
-											})}
+															<Checkbox
+																id={categoryKey}
+																checked={
+																	categoryAdhkaar.every(adhkar =>
+																		field.value?.includes(adhkar.id),
+																	) || false
+																}
+																onCheckedChange={checked => {
+																	let current = field.value || []
+																	if (checked) {
+																		let allIds = categoryAdhkaar.map(a => a.id)
+																		let newIds = [
+																			...current.filter(
+																				id => !allIds.includes(id),
+																			),
+																			...allIds,
+																		]
+																		field.onChange(newIds)
+																	} else {
+																		let allIds = categoryAdhkaar.map(a => a.id)
+																		field.onChange(
+																			current.filter(
+																				id => !allIds.includes(id),
+																			),
+																		)
+																	}
+																}}
+															/>
+															<label
+																htmlFor={categoryKey}
+																className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
+															>
+																<T
+																	k={`ibaadah.form.dhikr.category.${category}`}
+																/>
+															</label>
+														</div>
+													)
+												},
+											)}
 										</div>
 									</FormControl>
 									<FormMessage />
@@ -616,12 +676,13 @@ function IbaadahForm({
 							control={form.control}
 							name="customDhikr"
 							render={({ field }) => {
-								let savedTemplates = me.$isLoaded && me.root.customDhikrTemplates
-									? Array.from(me.root.customDhikrTemplates.values()).filter(
-											(t): t is Extract<typeof t, { $isLoaded: true }> =>
-												t?.$isLoaded === true,
-										)
-									: []
+								let savedTemplates =
+									me.$isLoaded && me.root.customDhikrTemplates
+										? Array.from(me.root.customDhikrTemplates.values()).filter(
+												(t): t is Extract<typeof t, { $isLoaded: true }> =>
+													t?.$isLoaded === true,
+											)
+										: []
 
 								return (
 									<FormItem>
@@ -631,8 +692,8 @@ function IbaadahForm({
 										<FormControl>
 											<div className="space-y-2">
 												{savedTemplates.length > 0 && (
-													<div className="border rounded-md p-2 space-y-1">
-														<div className="text-xs text-muted-foreground mb-1">
+													<div className="space-y-1 rounded-md border p-2">
+														<div className="text-muted-foreground mb-1 text-xs">
 															<T k="ibaadah.form.dhikr.savedTemplates" />
 														</div>
 														{savedTemplates.map(template => (
@@ -653,7 +714,9 @@ function IbaadahForm({
 												)}
 												<Textarea
 													{...field}
-													placeholder={t("ibaadah.form.dhikr.custom.placeholder")}
+													placeholder={t(
+														"ibaadah.form.dhikr.custom.placeholder",
+													)}
 												/>
 												{me.$isLoaded && field.value && (
 													<Button
@@ -661,7 +724,8 @@ function IbaadahForm({
 														variant="ghost"
 														size="sm"
 														onClick={() => {
-															if (!me.$isLoaded || !me.root || !field.value) return
+															if (!me.$isLoaded || !me.root || !field.value)
+																return
 															if (!me.root.customDhikrTemplates) {
 																me.root.$jazz.set(
 																	"customDhikrTemplates",
@@ -670,9 +734,9 @@ function IbaadahForm({
 															}
 															let templates = me.root.customDhikrTemplates
 															if (!templates) return
-															let existing = Array.from(templates.values()).find(
-																t => t.$isLoaded && t.name === field.value,
-															)
+															let existing = Array.from(
+																templates.values(),
+															).find(t => t.$isLoaded && t.name === field.value)
 															if (!existing) {
 																let now = new Date()
 																let template = CustomDhikrTemplate.create({
@@ -681,7 +745,9 @@ function IbaadahForm({
 																	createdAt: now,
 																	updatedAt: now,
 																})
-																;(templates as NonNullable<typeof templates>).$jazz.push(template)
+																;(
+																	templates as NonNullable<typeof templates>
+																).$jazz.push(template)
 																toast.success(t("ibaadah.template.saved"))
 															} else {
 																toast.info(t("ibaadah.template.alreadyExists"))
@@ -779,9 +845,13 @@ function IbaadahForm({
 																? inRamadan
 																	? t("ibaadah.form.fasting.type.ramadan")
 																	: isMonThu
-																		? t("ibaadah.form.fasting.type.mondayThursday")
+																		? t(
+																				"ibaadah.form.fasting.type.mondayThursday",
+																			)
 																		: isBeed
-																			? t("ibaadah.form.fasting.type.ayyaamulBeed")
+																			? t(
+																					"ibaadah.form.fasting.type.ayyaamulBeed",
+																				)
 																			: t("ibaadah.form.fasting.type.custom")
 																: undefined
 														}
@@ -805,10 +875,7 @@ function IbaadahForm({
 															</span>
 														)}
 													</SelectItem>
-													<SelectItem
-														value="ayyaamul-beed"
-														disabled={!isBeed}
-													>
+													<SelectItem value="ayyaamul-beed" disabled={!isBeed}>
 														<T k="ibaadah.form.fasting.type.ayyaamulBeed" />
 														{!isBeed && (
 															<span className="text-muted-foreground text-xs">
@@ -853,12 +920,15 @@ function IbaadahForm({
 							control={form.control}
 							name="nawaafilIds"
 							render={({ field }) => {
-								let savedTemplates = me.$isLoaded && me.root.customNawaafilTemplates
-									? Array.from(me.root.customNawaafilTemplates.values()).filter(
-											(t): t is Extract<typeof t, { $isLoaded: true }> =>
-												t?.$isLoaded === true,
-										)
-									: []
+								let savedTemplates =
+									me.$isLoaded && me.root.customNawaafilTemplates
+										? Array.from(
+												me.root.customNawaafilTemplates.values(),
+											).filter(
+												(t): t is Extract<typeof t, { $isLoaded: true }> =>
+													t?.$isLoaded === true,
+											)
+										: []
 
 								return (
 									<FormItem>
@@ -866,12 +936,17 @@ function IbaadahForm({
 											<T k="ibaadah.form.nawaafil.label" />
 										</FormLabel>
 										<FormControl>
-											<div className="space-y-2 max-h-60 overflow-y-auto">
+											<div className="max-h-60 space-y-2 overflow-y-auto">
 												{nawaafil.map(nawafil => (
-													<div key={nawafil.id} className="flex items-center gap-2">
+													<div
+														key={nawafil.id}
+														className="flex items-center gap-2"
+													>
 														<Checkbox
 															id={nawafil.id}
-															checked={field.value?.includes(nawafil.id) || false}
+															checked={
+																field.value?.includes(nawafil.id) || false
+															}
 															onCheckedChange={checked => {
 																let current = field.value || []
 																if (checked) {
@@ -892,18 +967,22 @@ function IbaadahForm({
 													</div>
 												))}
 												{savedTemplates.length > 0 && (
-													<div className="border-t pt-2 mt-2">
-														<div className="text-xs text-muted-foreground mb-2">
+													<div className="mt-2 border-t pt-2">
+														<div className="text-muted-foreground mb-2 text-xs">
 															<T k="ibaadah.form.nawaafil.savedTemplates" />
 														</div>
 														{savedTemplates.map(template => (
-															<div key={template.$jazz.id} className="flex items-center gap-2">
+															<div
+																key={template.$jazz.id}
+																className="flex items-center gap-2"
+															>
 																<Checkbox
 																	id={`template-${template.$jazz.id}`}
 																	checked={false}
 																	onCheckedChange={checked => {
 																		if (checked) {
-																			let customNawaafil = form.getValues("customNawaafil") || []
+																			let customNawaafil =
+																				form.getValues("customNawaafil") || []
 																			form.setValue("customNawaafil", [
 																				...customNawaafil,
 																				{
@@ -919,7 +998,8 @@ function IbaadahForm({
 																	className="text-sm leading-none font-medium peer-disabled:cursor-not-allowed peer-disabled:opacity-70"
 																>
 																	{template.name}
-																	{template.rakaat && ` (${template.rakaat} rakaat)`}
+																	{template.rakaat &&
+																		` (${template.rakaat} rakaat)`}
 																</label>
 															</div>
 														))}
@@ -946,7 +1026,9 @@ function IbaadahForm({
 												<div key={index} className="space-y-2">
 													<div className="flex items-center gap-2">
 														<Input
-															placeholder={t("ibaadah.form.nawaafil.custom.placeholder")}
+															placeholder={t(
+																"ibaadah.form.nawaafil.custom.placeholder",
+															)}
 															value={item.name}
 															onChange={e => {
 																let updated = [...(field.value || [])]
@@ -961,8 +1043,14 @@ function IbaadahForm({
 														<Input
 															type="number"
 															min="1"
-															placeholder={t("ibaadah.form.nawaafil.rakaat.label")}
-															value={item.rakaat === undefined ? "" : String(item.rakaat)}
+															placeholder={t(
+																"ibaadah.form.nawaafil.rakaat.label",
+															)}
+															value={
+																item.rakaat === undefined
+																	? ""
+																	: String(item.rakaat)
+															}
 															onChange={e => {
 																let updated = [...(field.value || [])]
 																updated[index] = {
@@ -994,7 +1082,8 @@ function IbaadahForm({
 															variant="ghost"
 															size="sm"
 															onClick={() => {
-																if (!me.$isLoaded || !me.root || !item.name) return
+																if (!me.$isLoaded || !me.root || !item.name)
+																	return
 																if (!me.root.customNawaafilTemplates) {
 																	me.root.$jazz.set(
 																		"customNawaafilTemplates",
@@ -1003,9 +1092,9 @@ function IbaadahForm({
 																}
 																let templates = me.root.customNawaafilTemplates
 																if (!templates) return
-																let existing = Array.from(templates.values()).find(
-																	t => t.$isLoaded && t.name === item.name,
-																)
+																let existing = Array.from(
+																	templates.values(),
+																).find(t => t.$isLoaded && t.name === item.name)
 																if (!existing) {
 																	let now = new Date()
 																	let templateInit: {
@@ -1023,11 +1112,16 @@ function IbaadahForm({
 																	if (typeof item.rakaat === "number") {
 																		templateInit.rakaat = item.rakaat
 																	}
-																	let template = CustomNawaafilTemplate.create(templateInit)
-																	;(templates as NonNullable<typeof templates>).$jazz.push(template)
+																	let template =
+																		CustomNawaafilTemplate.create(templateInit)
+																	;(
+																		templates as NonNullable<typeof templates>
+																	).$jazz.push(template)
 																	toast.success(t("ibaadah.template.saved"))
 																} else {
-																	toast.info(t("ibaadah.template.alreadyExists"))
+																	toast.info(
+																		t("ibaadah.template.alreadyExists"),
+																	)
 																}
 															}}
 															title={t("ibaadah.form.nawaafil.saveTemplate")}
@@ -1042,7 +1136,10 @@ function IbaadahForm({
 												variant="outline"
 												size="sm"
 												onClick={() => {
-													field.onChange([...(field.value || []), { name: "", rakaat: undefined }])
+													field.onChange([
+														...(field.value || []),
+														{ name: "", rakaat: undefined },
+													])
 												}}
 											>
 												<Plus className="size-4" />
@@ -1129,7 +1226,15 @@ function IbaadahForm({
 
 function createIbaadahFormSchema(t: ReturnType<typeof useIntl>) {
 	return z.object({
-		type: z.enum(["salah", "quran", "dhikr", "sadaqa", "fasting", "nawaafil", "custom"]),
+		type: z.enum([
+			"salah",
+			"quran",
+			"dhikr",
+			"sadaqa",
+			"fasting",
+			"nawaafil",
+			"custom",
+		]),
 		date: z.string().min(1, t("ibaadah.form.date.required")),
 		salahPrayers: z
 			.array(z.enum(["fajr", "dhuhr", "asr", "maghrib", "isha"]))
@@ -1144,7 +1249,9 @@ function createIbaadahFormSchema(t: ReturnType<typeof useIntl>) {
 		customDhikr: z.string().optional(),
 		sadaqaAmount: z.coerce.number().min(0).optional(),
 		sadaqaDescription: z.string().optional(),
-		fastingType: z.enum(["ramadan", "monday-thursday", "ayyaamul-beed", "custom"]).optional(),
+		fastingType: z
+			.enum(["ramadan", "monday-thursday", "ayyaamul-beed", "custom"])
+			.optional(),
 		fastingCustomDescription: z.string().optional(),
 		nawaafilIds: z.array(z.string()).optional(),
 		customNawaafil: z

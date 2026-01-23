@@ -260,9 +260,7 @@ function NoEntriesForDateState({ date }: { date: string }) {
 					<EmptyTitle>
 						<T k="ibaadah.entries.empty.forDate" />
 					</EmptyTitle>
-					<EmptyDescription>
-						{formattedDate}
-					</EmptyDescription>
+					<EmptyDescription>{formattedDate}</EmptyDescription>
 				</EmptyHeader>
 			</Empty>
 			<NewIbaadahEntry date={date}>
@@ -300,4 +298,3 @@ function SelectDateState() {
 function Spacer() {
 	return <div className="h-20" />
 }
-

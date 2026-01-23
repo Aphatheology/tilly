@@ -37,7 +37,7 @@ function AdhkaarReader() {
 		toast.success(t("adhkaar.copied"))
 	}
 
-	function shareAdhkar(adhkar: typeof adhkaar[0]) {
+	function shareAdhkar(adhkar: (typeof adhkaar)[0]) {
 		if (navigator.share) {
 			navigator.share({
 				title: adhkar.translation.substring(0, 50),
@@ -78,14 +78,14 @@ function AdhkaarReader() {
 								>
 									<div className="space-y-4">
 										<div
-											className="text-2xl leading-relaxed text-right"
+											className="text-right text-2xl leading-relaxed"
 											dir="rtl"
 											lang="ar"
 										>
 											{adhkar.arabic}
 										</div>
 										{adhkar.transliteration && (
-											<div className="text-muted-foreground italic text-sm">
+											<div className="text-muted-foreground text-sm italic">
 												{adhkar.transliteration}
 											</div>
 										)}
@@ -96,7 +96,7 @@ function AdhkaarReader() {
 											</div>
 										)}
 									</div>
-									<div className="absolute bottom-4 left-4 right-4 flex justify-end gap-2">
+									<div className="absolute right-4 bottom-4 left-4 flex justify-end gap-2">
 										<Button
 											variant="ghost"
 											size="icon"
@@ -121,7 +121,7 @@ function AdhkaarReader() {
 				))}
 			</Tabs>
 
-			<div className="fixed bottom-4 right-4 flex gap-2 rounded-lg border bg-background p-2 shadow-lg">
+			<div className="bg-background fixed right-4 bottom-4 flex gap-2 rounded-lg border p-2 shadow-lg">
 				<Button
 					variant="ghost"
 					size="icon"

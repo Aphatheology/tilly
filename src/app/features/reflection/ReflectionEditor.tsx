@@ -1,6 +1,5 @@
 import { useState } from "react"
-import { useAccount } from "#app/context/jazz-provider"
-import { Reflection, ReflectionMood } from "#shared/schema/reflection"
+import type { ReflectionMood } from "#shared/schema/reflection"
 import { Button } from "#app/components/ui/button"
 import { Textarea } from "#app/components/ui/textarea"
 import { Badge } from "#app/components/ui/badge"
@@ -68,7 +67,9 @@ export function ReflectionEditor({
 							onClick={() => setMood(m.type)}
 							className={cn(
 								"group relative flex flex-col items-center justify-center p-2 transition-all hover:scale-110 focus:outline-none",
-								mood === m.type ? "scale-110 transform" : "opacity-70 hover:opacity-100"
+								mood === m.type
+									? "scale-110 transform"
+									: "opacity-70 hover:opacity-100",
 							)}
 						>
 							<span
@@ -82,11 +83,11 @@ export function ReflectionEditor({
 							>
 								{m.emoji}
 							</span>
-							<span className="text-xs font-medium text-muted-foreground mt-1">
+							<span className="text-muted-foreground mt-1 text-xs font-medium">
 								{m.label}
 							</span>
 							{mood === m.type && (
-								<div className="absolute -bottom-1 h-1 w-1 rounded-full bg-primary" />
+								<div className="bg-primary absolute -bottom-1 h-1 w-1 rounded-full" />
 							)}
 						</button>
 					))}
@@ -106,14 +107,14 @@ export function ReflectionEditor({
 
 			<div className="space-y-2">
 				<Label htmlFor="tags">Tags</Label>
-				<div className="flex flex-wrap gap-2 mb-2">
+				<div className="mb-2 flex flex-wrap gap-2">
 					{tags.map(tag => (
 						<Badge key={tag} variant="secondary" className="px-2 py-1">
 							{tag}
 							<button
 								type="button"
 								onClick={() => removeTag(tag)}
-								className="ml-2 hover:text-destructive"
+								className="hover:text-destructive ml-2"
 							>
 								×
 							</button>
@@ -133,7 +134,7 @@ export function ReflectionEditor({
 							}
 						}}
 						placeholder="Add a tag..."
-						className="flex h-10 w-full rounded-md border border-input bg-background px-3 py-2 text-sm ring-offset-background file:border-0 file:bg-transparent file:text-sm file:font-medium placeholder:text-muted-foreground focus-visible:outline-none focus-visible:ring-2 focus-visible:ring-ring focus-visible:ring-offset-2 disabled:cursor-not-allowed disabled:opacity-50"
+						className="border-input bg-background ring-offset-background placeholder:text-muted-foreground focus-visible:ring-ring flex h-10 w-full rounded-md border px-3 py-2 text-sm file:border-0 file:bg-transparent file:text-sm file:font-medium focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:outline-none disabled:cursor-not-allowed disabled:opacity-50"
 					/>
 					<Button type="button" variant="outline" onClick={addTag}>
 						Add

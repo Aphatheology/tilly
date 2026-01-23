@@ -14,7 +14,10 @@ export function usePoints() {
 
 		const loadedMe = me as Extract<typeof me, { $isLoaded: true }>
 		if (!loadedMe.root.$isLoaded) return
-		const root = loadedMe.root as Extract<typeof loadedMe.root, { $isLoaded: true }>
+		const root = loadedMe.root as Extract<
+			typeof loadedMe.root,
+			{ $isLoaded: true }
+		>
 
 		// Update balance
 		const currentBalance = root.pointsBalance || 0
@@ -45,8 +48,10 @@ export function usePoints() {
 		root.pointsHistory.$jazz.push(historyEntry)
 	}
 
-	const loadedMe = me.$isLoaded ? (me as Extract<typeof me, { $isLoaded: true }>) : null
-	const root = loadedMe?.root?.$isLoaded 
+	const loadedMe = me.$isLoaded
+		? (me as Extract<typeof me, { $isLoaded: true }>)
+		: null
+	const root = loadedMe?.root?.$isLoaded
 		? (loadedMe.root as Extract<typeof loadedMe.root, { $isLoaded: true }>)
 		: null
 	const balance = root?.pointsBalance || 0

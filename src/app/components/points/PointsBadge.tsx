@@ -10,7 +10,7 @@ export function PointsBadge({ className }: { className?: string }) {
 			variant="secondary"
 			className={cn(
 				"flex items-center gap-1 font-mono transition-all hover:scale-105",
-				className
+				className,
 			)}
 		>
 			<span className="text-yellow-500">✨</span>

@@ -25,7 +25,12 @@ import { usePoints } from "#app/features/points/use-points"
 
 export { NewIbaadahEntry }
 
-let nonRepeatableTypes: IbaadahType[] = ["salah", "fasting", "dhikr", "nawaafil"]
+let nonRepeatableTypes: IbaadahType[] = [
+	"salah",
+	"fasting",
+	"dhikr",
+	"nawaafil",
+]
 
 function NewIbaadahEntry(props: {
 	children: ReactNode
@@ -44,15 +49,17 @@ function NewIbaadahEntry(props: {
 		if (!me.$isLoaded || !props.date) return null
 		let root = (me as Extract<typeof me, { $isLoaded: true }>).root
 		if (!root) return null
-		
+
 		if (props.type && nonRepeatableTypes.includes(props.type)) {
 			let entries = Array.from(root.ibaadahEntries?.values() || []).filter(
 				(e): e is Extract<typeof e, { $isLoaded: true }> =>
-					e?.$isLoaded === true && e.type === props.type && e.date === props.date,
+					e?.$isLoaded === true &&
+					e.type === props.type &&
+					e.date === props.date,
 			)
 			return entries[0] || null
 		}
-		
+
 		if (!props.type) {
 			let allEntries = Array.from(root.ibaadahEntries?.values() || []).filter(
 				(e): e is Extract<typeof e, { $isLoaded: true }> =>
@@ -60,7 +67,7 @@ function NewIbaadahEntry(props: {
 			)
 			return allEntries[0] || null
 		}
-		
+
 		return null
 	}, [me, props.date, props.type])
 
@@ -86,7 +93,7 @@ function NewIbaadahEntry(props: {
 					"values" in existingEntry.value && existingEntry.value.values
 						? existingEntry.value.values
 						: "value" in existingEntry.value &&
-								existingEntry.value.value !== undefined
+							  existingEntry.value.value !== undefined
 							? [existingEntry.value.value as number]
 							: []
 				prefill.quranPages = existingEntry.value.pages
@@ -155,7 +162,9 @@ function NewIbaadahEntry(props: {
 
 			if (!result.ok) {
 				toast.error(
-					typeof result.error === "string" ? result.error : result.error.message,
+					typeof result.error === "string"
+						? result.error
+						: result.error.message,
 				)
 				return
 			}
@@ -194,10 +203,18 @@ function NewIbaadahEntry(props: {
 		}
 
 		props.onSuccess?.(result.data.entryID)
-		
+
 		// Award points for creating an entry
-		awardPoints(10, `Logged ${values.type}`, values.type === "salah" || values.type === "quran" || values.type === "dhikr" ? values.type : "other")
-		
+		awardPoints(
+			10,
+			`Logged ${values.type}`,
+			values.type === "salah" ||
+				values.type === "quran" ||
+				values.type === "dhikr"
+				? values.type
+				: "other",
+		)
+
 		toast.success(t("ibaadah.created.success"))
 		setDialogOpen(false)
 	}

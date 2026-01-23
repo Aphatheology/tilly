@@ -81,7 +81,11 @@ function gregorianToJulian(date: Date): number {
 	)
 }
 
-function julianToHijri(julianDay: number): { year: number; month: number; day: number } {
+function julianToHijri(julianDay: number): {
+	year: number
+	month: number
+	day: number
+} {
 	julianDay = Math.floor(julianDay) + 0.5
 
 	let hijriEpoch = 1948439.5

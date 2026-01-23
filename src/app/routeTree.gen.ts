@@ -14,6 +14,8 @@ import { Route as AppRouteImport } from './routes/_app'
 import { Route as IndexRouteImport } from './routes/index'
 import { Route as AppSettingsRouteImport } from './routes/_app.settings'
 import { Route as AppRemindersRouteImport } from './routes/_app.reminders'
+import { Route as AppReflectionsRouteImport } from './routes/_app.reflections'
+import { Route as AppPointsRouteImport } from './routes/_app.points'
 import { Route as AppNotesRouteImport } from './routes/_app.notes'
 import { Route as AppInviteRouteImport } from './routes/_app.invite'
 import { Route as AppIbaadahRouteImport } from './routes/_app.ibaadah'
@@ -47,6 +49,16 @@ const AppSettingsRoute = AppSettingsRouteImport.update({
 const AppRemindersRoute = AppRemindersRouteImport.update({
   id: '/reminders',
   path: '/reminders',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppReflectionsRoute = AppReflectionsRouteImport.update({
+  id: '/reflections',
+  path: '/reflections',
+  getParentRoute: () => AppRoute,
+} as any)
+const AppPointsRoute = AppPointsRouteImport.update({
+  id: '/points',
+  path: '/points',
   getParentRoute: () => AppRoute,
 } as any)
 const AppNotesRoute = AppNotesRouteImport.update({
@@ -110,6 +122,8 @@ export interface FileRoutesByFullPath {
   '/ibaadah': typeof AppIbaadahRoute
   '/invite': typeof AppInviteRoute
   '/notes': typeof AppNotesRoute
+  '/points': typeof AppPointsRoute
+  '/reflections': typeof AppReflectionsRoute
   '/reminders': typeof AppRemindersRoute
   '/settings': typeof AppSettingsRoute
   '/groups/$groupID': typeof AppGroupsGroupIDRoute
@@ -126,6 +140,8 @@ export interface FileRoutesByTo {
   '/ibaadah': typeof AppIbaadahRoute
   '/invite': typeof AppInviteRoute
   '/notes': typeof AppNotesRoute
+  '/points': typeof AppPointsRoute
+  '/reflections': typeof AppReflectionsRoute
   '/reminders': typeof AppRemindersRoute
   '/settings': typeof AppSettingsRoute
   '/groups/$groupID': typeof AppGroupsGroupIDRoute
@@ -144,6 +160,8 @@ export interface FileRoutesById {
   '/_app/ibaadah': typeof AppIbaadahRoute
   '/_app/invite': typeof AppInviteRoute
   '/_app/notes': typeof AppNotesRoute
+  '/_app/points': typeof AppPointsRoute
+  '/_app/reflections': typeof AppReflectionsRoute
   '/_app/reminders': typeof AppRemindersRoute
   '/_app/settings': typeof AppSettingsRoute
   '/_app/groups/$groupID': typeof AppGroupsGroupIDRoute
@@ -162,6 +180,8 @@ export interface FileRouteTypes {
     | '/ibaadah'
     | '/invite'
     | '/notes'
+    | '/points'
+    | '/reflections'
     | '/reminders'
     | '/settings'
     | '/groups/$groupID'
@@ -178,6 +198,8 @@ export interface FileRouteTypes {
     | '/ibaadah'
     | '/invite'
     | '/notes'
+    | '/points'
+    | '/reflections'
     | '/reminders'
     | '/settings'
     | '/groups/$groupID'
@@ -195,6 +217,8 @@ export interface FileRouteTypes {
     | '/_app/ibaadah'
     | '/_app/invite'
     | '/_app/notes'
+    | '/_app/points'
+    | '/_app/reflections'
     | '/_app/reminders'
     | '/_app/settings'
     | '/_app/groups/$groupID'
@@ -243,6 +267,20 @@ declare module '@tanstack/react-router' {
       path: '/reminders'
       fullPath: '/reminders'
       preLoaderRoute: typeof AppRemindersRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/reflections': {
+      id: '/_app/reflections'
+      path: '/reflections'
+      fullPath: '/reflections'
+      preLoaderRoute: typeof AppReflectionsRouteImport
+      parentRoute: typeof AppRoute
+    }
+    '/_app/points': {
+      id: '/_app/points'
+      path: '/points'
+      fullPath: '/points'
+      preLoaderRoute: typeof AppPointsRouteImport
       parentRoute: typeof AppRoute
     }
     '/_app/notes': {
@@ -338,6 +376,8 @@ interface AppRouteChildren {
   AppIbaadahRoute: typeof AppIbaadahRoute
   AppInviteRoute: typeof AppInviteRoute
   AppNotesRoute: typeof AppNotesRoute
+  AppPointsRoute: typeof AppPointsRoute
+  AppReflectionsRoute: typeof AppReflectionsRoute
   AppRemindersRoute: typeof AppRemindersRoute
   AppSettingsRoute: typeof AppSettingsRoute
   AppPeoplePersonIDRoute: typeof AppPeoplePersonIDRoute
@@ -352,6 +392,8 @@ const AppRouteChildren: AppRouteChildren = {
   AppIbaadahRoute: AppIbaadahRoute,
   AppInviteRoute: AppInviteRoute,
   AppNotesRoute: AppNotesRoute,
+  AppPointsRoute: AppPointsRoute,
+  AppReflectionsRoute: AppReflectionsRoute,
   AppRemindersRoute: AppRemindersRoute,
   AppSettingsRoute: AppSettingsRoute,
   AppPeoplePersonIDRoute: AppPeoplePersonIDRoute,

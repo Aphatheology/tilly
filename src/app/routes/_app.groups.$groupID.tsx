@@ -15,12 +15,7 @@ import {
 	DialogDescription,
 	DialogTrigger,
 } from "#shared/ui/dialog"
-import {
-	Tabs,
-	TabsContent,
-	TabsList,
-	TabsTrigger,
-} from "#shared/ui/tabs"
+import { Tabs, TabsContent, TabsList, TabsTrigger } from "#shared/ui/tabs"
 import {
 	IbaadahForm,
 	transformFormDataToIbaadahValue,
@@ -62,11 +57,15 @@ export let Route = createFileRoute("/_app/groups/$groupID")({
 			resolve,
 		})
 		if (!loadedMe.$isLoaded || !loadedMe.root) throw notFound()
-		const root = (loadedMe as Extract<typeof loadedMe, { $isLoaded: true }>).root
+		const root = (loadedMe as Extract<typeof loadedMe, { $isLoaded: true }>)
+			.root
 		// @ts-expect-error - ibaadahGroups exists at runtime via resolve query
 		const groupsList = root.ibaadahGroups
 		if (!groupsList || !groupsList.$isLoaded) throw notFound()
-		const loadedGroupsList = groupsList as Extract<typeof groupsList, { $isLoaded: true }>
+		const loadedGroupsList = groupsList as Extract<
+			typeof groupsList,
+			{ $isLoaded: true }
+		>
 		let groups = Array.from(loadedGroupsList.values()).filter(
 			(g): g is Loaded<typeof IbaadahGroup> => {
 				if (!g || typeof g !== "object") return false
@@ -85,14 +84,14 @@ let resolve = {
 	root: {
 		ibaadahGroups: {
 			$each: {
-				entries: { 
+				entries: {
 					$each: {
-						_owner: { profile: true }
-					} 
+						_owner: { profile: true },
+					},
 				},
-				reflections: { 
-					$each: true
-				}
+				reflections: {
+					$each: true,
+				},
 			},
 		},
 	},
@@ -106,11 +105,15 @@ function GroupDetail() {
 
 	if (!currentMe.$isLoaded || !currentMe.root) return null
 
-	const root = (currentMe as Extract<typeof currentMe, { $isLoaded: true }>).root
+	const root = (currentMe as Extract<typeof currentMe, { $isLoaded: true }>)
+		.root
 	// @ts-expect-error - ibaadahGroups exists at runtime via resolve query
 	const groupsList = root.ibaadahGroups
 	if (!groupsList || !groupsList.$isLoaded) return null
-	const loadedGroupsList = groupsList as Extract<typeof groupsList, { $isLoaded: true }>
+	const loadedGroupsList = groupsList as Extract<
+		typeof groupsList,
+		{ $isLoaded: true }
+	>
 	let groups = Array.from(loadedGroupsList.values()).filter(
 		(g): g is Loaded<typeof IbaadahGroup> => {
 			if (!g || typeof g !== "object") return false
@@ -122,11 +125,11 @@ function GroupDetail() {
 	if (!group) {
 		return null
 	}
- 
+
 	// Ensure reflections list exists (migration)
 	if (!group.reflections) {
-		// Just a safeguard, UI should handle it, 
-		// but ideally we create it. 
+		// Just a safeguard, UI should handle it,
+		// but ideally we create it.
 		// Since we are in render, we can't create side effects easily without useEffect/handler.
 		// We'll handle creation on add.
 	}
@@ -150,15 +153,15 @@ function GroupDetail() {
 					<TabsTrigger value="reflections">Reflections</TabsTrigger>
 					<TabsTrigger value="leaderboard">Leaderboard</TabsTrigger>
 				</TabsList>
-				
+
 				<TabsContent value="tracker" className="space-y-6">
 					<GroupTracker group={group} me={currentMe} />
 				</TabsContent>
-				
+
 				<TabsContent value="reflections" className="space-y-6">
 					<GroupReflections group={group} />
 				</TabsContent>
-				
+
 				<TabsContent value="leaderboard">
 					<GroupLeaderboard group={group} />
 				</TabsContent>
@@ -170,91 +173,114 @@ function GroupDetail() {
 function InviteButton({ groupId }: { groupId: string }) {
 	return (
 		<Button asChild variant="outline">
-			<a href={`/app/groups/${groupId}/invite`}>
-				Invite Members
-			</a>
+			<a href={`/app/groups/${groupId}/invite`}>Invite Members</a>
 		</Button>
 	)
 }
 
-function GroupTracker({ group, me }: { group: Loaded<typeof IbaadahGroup>; me: Loaded<typeof UserAccount> }) {
+function GroupTracker({
+	group,
+	me,
+}: {
+	group: Loaded<typeof IbaadahGroup>
+	me: Loaded<typeof UserAccount>
+}) {
 	if (!group.entries || !group.entries.$isLoaded) return null
-	
+
 	let entries = Array.from(group.entries.values()).filter(
 		(e): e is Loaded<typeof import("#shared/schema/ibaadah").IbaadahEntry> =>
 			Boolean(e && e.$isLoaded),
 	)
-	
+
 	let todayStr = new Date().toISOString().substring(0, 10)
 	let todayCount = entries.filter(e => e.date === todayStr).length
-	
+
 	return (
 		<>
 			<div className="flex justify-end">
 				<NewGroupIbaadahEntry groupId={group.$jazz.id}>
 					<Button>
-						<Plus className="size-4 mr-2" />
+						<Plus className="mr-2 size-4" />
 						Record Ibaadah
 					</Button>
 				</NewGroupIbaadahEntry>
 			</div>
-			
+
 			<div className="grid gap-3 md:grid-cols-2 lg:grid-cols-3">
 				<Card>
 					<CardHeader className="pb-2">
-						<CardTitle className="text-sm font-medium">Group Activity</CardTitle>
+						<CardTitle className="text-sm font-medium">
+							Group Activity
+						</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<div className="text-2xl font-bold">{entries.length}</div>
-						<p className="text-xs text-muted-foreground">Total records shared</p>
+						<p className="text-muted-foreground text-xs">
+							Total records shared
+						</p>
 					</CardContent>
 				</Card>
 				<Card>
 					<CardHeader className="pb-2">
-						<CardTitle className="text-sm font-medium">Activity Today</CardTitle>
+						<CardTitle className="text-sm font-medium">
+							Activity Today
+						</CardTitle>
 					</CardHeader>
 					<CardContent>
 						<div className="text-2xl font-bold">{todayCount}</div>
-						<p className="text-xs text-muted-foreground">Records today</p>
+						<p className="text-muted-foreground text-xs">Records today</p>
 					</CardContent>
 				</Card>
 			</div>
 
-			<div className="space-y-2 rounded-lg border p-4 bg-card">
-				<h3 className="font-semibold mb-4">Recent Activity</h3>
+			<div className="bg-card space-y-2 rounded-lg border p-4">
+				<h3 className="mb-4 font-semibold">Recent Activity</h3>
 				{entries.length === 0 ? (
 					<div className="text-muted-foreground py-6 text-center">
 						<T k="ibaadah.entries.empty" />
 					</div>
 				) : (
-					entries.sort((a,b) => b.createdAt.getTime() - a.createdAt.getTime()).map(entry => {
-						const owner = (entry as EntryWithOwner)._owner
-						return (
-							<div key={entry.$jazz.id} className="mb-4 last:mb-0">
-								<div className="flex items-center gap-2 mb-1 text-xs text-muted-foreground">
-									<span className="font-medium text-foreground">
-										{owner?.profile?.name || "Unknown"}
-									</span>
-									<span>•</span>
-									<span>{format(entry.createdAt, "MMM d, h:mm a")}</span>
+					entries
+						.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
+						.map(entry => {
+							const owner = (entry as EntryWithOwner)._owner
+							return (
+								<div key={entry.$jazz.id} className="mb-4 last:mb-0">
+									<div className="text-muted-foreground mb-1 flex items-center gap-2 text-xs">
+										<span className="text-foreground font-medium">
+											{owner?.profile?.name || "Unknown"}
+										</span>
+										<span>•</span>
+										<span>{format(entry.createdAt, "MMM d, h:mm a")}</span>
+									</div>
+									<IbaadahEntryListItem
+										entry={entry}
+										me={me}
+										onEdit={
+											owner?.$jazz.id === me.$jazz.id
+												? values =>
+														updateGroupEntry(
+															values,
+															me.$jazz.id,
+															group.$jazz.id,
+															entry.$jazz.id,
+														)
+												: undefined
+										}
+										onDelete={
+											owner?.$jazz.id === me.$jazz.id
+												? () =>
+														deleteGroupEntry(
+															me.$jazz.id,
+															group.$jazz.id,
+															entry.$jazz.id,
+														)
+												: undefined
+										}
+									/>
 								</div>
-								<IbaadahEntryListItem
-									entry={entry}
-									me={me}
-									onEdit={
-										owner?.$jazz.id === me.$jazz.id 
-										? (values) => updateGroupEntry(values, me.$jazz.id, group.$jazz.id, entry.$jazz.id)
-										: undefined
-									}
-									onDelete={
-										owner?.$jazz.id === me.$jazz.id
-										? () => deleteGroupEntry(me.$jazz.id, group.$jazz.id, entry.$jazz.id)
-										: undefined
-									}
-								/>
-							</div>
-						)
-					})
+							)
+						})
 				)}
 			</div>
 		</>
@@ -263,26 +289,37 @@ function GroupTracker({ group, me }: { group: Loaded<typeof IbaadahGroup>; me: L
 
 function GroupReflections({ group }: { group: Loaded<typeof IbaadahGroup> }) {
 	const [isCreating, setIsCreating] = useState(false)
-	
-	const handleCreate = (data: { content: string; mood?: string; tags: string[] }) => {
+
+	const handleCreate = (data: {
+		content: string
+		mood?: string
+		tags: string[]
+	}) => {
 		if (!group.reflections) {
 			const owner = group.$jazz.owner
 			if (!owner) return
 			group.$jazz.set("reflections", co.list(Reflection).create([], owner))
 		}
-		
+
 		if (!group.reflections || !group.reflections.$isLoaded) return
-		
+
 		const reflection = Reflection.create({
 			version: 1,
 			content: data.content,
-			mood: data.mood as "happy" | "grateful" | "neutral" | "sad" | "stressed" | "inspired" | undefined,
+			mood: data.mood as
+				| "happy"
+				| "grateful"
+				| "neutral"
+				| "sad"
+				| "stressed"
+				| "inspired"
+				| undefined,
 			tags: data.tags,
 			date: new Date().toISOString().split("T")[0],
 			createdAt: new Date(),
 			updatedAt: new Date(),
 		})
-		
+
 		group.reflections.$jazz.push(reflection)
 		setIsCreating(false)
 	}
@@ -290,10 +327,10 @@ function GroupReflections({ group }: { group: Loaded<typeof IbaadahGroup> }) {
 	if (!group.reflections || !group.reflections.$isLoaded) {
 		return (
 			<div className="space-y-6">
-				<div className="flex justify-between items-center">
+				<div className="flex items-center justify-between">
 					<h3 className="text-lg font-semibold">Shared Reflections</h3>
 				</div>
-				<div className="text-center py-8 text-muted-foreground">
+				<div className="text-muted-foreground py-8 text-center">
 					No reflections shared yet.
 				</div>
 			</div>
@@ -301,14 +338,12 @@ function GroupReflections({ group }: { group: Loaded<typeof IbaadahGroup> }) {
 	}
 
 	const reflections = Array.from(group.reflections.values())
-		.filter((r): r is Loaded<typeof Reflection> =>
-			Boolean(r && r.$isLoaded),
-		)
+		.filter((r): r is Loaded<typeof Reflection> => Boolean(r && r.$isLoaded))
 		.sort((a, b) => b.createdAt.getTime() - a.createdAt.getTime())
 
 	return (
 		<div className="space-y-6">
-			<div className="flex justify-between items-center">
+			<div className="flex items-center justify-between">
 				<h3 className="text-lg font-semibold">Shared Reflections</h3>
 				{!isCreating && (
 					<Button onClick={() => setIsCreating(true)}>
@@ -330,53 +365,64 @@ function GroupReflections({ group }: { group: Loaded<typeof IbaadahGroup> }) {
 			)}
 
 			<div className="space-y-4">
-				{reflections.map((reflection) => {
+				{reflections.map(reflection => {
 					const owner = (reflection as ReflectionWithOwner)._owner
 					return (
-					<Card key={reflection.$jazz.id}>
-						<CardHeader className="flex flex-row items-center gap-3 space-y-0 py-3">
-							<Avatar className="h-8 w-8">
-								<AvatarImage src={owner?.profile?.avatar} />
-								<AvatarFallback>{owner?.profile?.name?.[0] || "?"}</AvatarFallback>
-							</Avatar>
-							<div className="flex flex-col">
-								<span className="text-sm font-medium">
-									{owner?.profile?.name || "Unknown"}
-								</span>
-								<span className="text-xs text-muted-foreground">
-									{format(new Date(reflection.createdAt), "PPP")}
-								</span>
-							</div>
-							{reflection.mood && (
-								<div className="ml-auto text-2xl">
-									{{
-										happy: "😊",
-										grateful: "🥰",
-										inspired: "🤩",
-										neutral: "😐",
-										stressed: "😓",
-										sad: "😢",
-									}[reflection.mood as string] || "😐"}
+						<Card key={reflection.$jazz.id}>
+							<CardHeader className="flex flex-row items-center gap-3 space-y-0 py-3">
+								<Avatar className="h-8 w-8">
+									<AvatarImage src={owner?.profile?.avatar} />
+									<AvatarFallback>
+										{owner?.profile?.name?.[0] || "?"}
+									</AvatarFallback>
+								</Avatar>
+								<div className="flex flex-col">
+									<span className="text-sm font-medium">
+										{owner?.profile?.name || "Unknown"}
+									</span>
+									<span className="text-muted-foreground text-xs">
+										{format(new Date(reflection.createdAt), "PPP")}
+									</span>
 								</div>
-							)}
-						</CardHeader>
-						<CardContent className="pb-4">
-							<p className="text-sm whitespace-pre-wrap">{reflection.content}</p>
-							{reflection.tags && reflection.tags.$isLoaded && Array.from(reflection.tags.values()).length > 0 && (
-								<div className="mt-2 flex flex-wrap gap-1">
-									{Array.from(reflection.tags.values()).map((tag: string) => (
-										<span key={tag} className="text-xs bg-muted px-1.5 py-0.5 rounded">
-											#{tag}
-										</span>
-									))}
-								</div>
-							)}
-						</CardContent>
-					</Card>
+								{reflection.mood && (
+									<div className="ml-auto text-2xl">
+										{{
+											happy: "😊",
+											grateful: "🥰",
+											inspired: "🤩",
+											neutral: "😐",
+											stressed: "😓",
+											sad: "😢",
+										}[reflection.mood as string] || "😐"}
+									</div>
+								)}
+							</CardHeader>
+							<CardContent className="pb-4">
+								<p className="text-sm whitespace-pre-wrap">
+									{reflection.content}
+								</p>
+								{reflection.tags &&
+									reflection.tags.$isLoaded &&
+									Array.from(reflection.tags.values()).length > 0 && (
+										<div className="mt-2 flex flex-wrap gap-1">
+											{Array.from(reflection.tags.values()).map(
+												(tag: string) => (
+													<span
+														key={tag}
+														className="bg-muted rounded px-1.5 py-0.5 text-xs"
+													>
+														#{tag}
+													</span>
+												),
+											)}
+										</div>
+									)}
+							</CardContent>
+						</Card>
 					)
 				})}
 				{reflections.length === 0 && !isCreating && (
-					<div className="text-center py-8 text-muted-foreground">
+					<div className="text-muted-foreground py-8 text-center">
 						No reflections shared yet.
 					</div>
 				)}
@@ -393,40 +439,43 @@ function GroupLeaderboard({ group }: { group: Loaded<typeof IbaadahGroup> }) {
 					<CardTitle>Leaderboard</CardTitle>
 				</CardHeader>
 				<CardContent>
-					<p className="text-center text-muted-foreground py-4">
+					<p className="text-muted-foreground py-4 text-center">
 						No activity yet.
 					</p>
 				</CardContent>
 			</Card>
 		)
 	}
-	
-	const entries = Array.from(group.entries.values())
-		.filter((e): e is Loaded<typeof import("#shared/schema/ibaadah").IbaadahEntry> =>
+
+	const entries = Array.from(group.entries.values()).filter(
+		(e): e is Loaded<typeof import("#shared/schema/ibaadah").IbaadahEntry> =>
 			Boolean(e && e.$isLoaded),
-		)
-	
-	const scores: Record<string, { name: string; score: number; updates: number }> = {}
-	
-	entries.forEach((entry) => {
+	)
+
+	const scores: Record<
+		string,
+		{ name: string; score: number; updates: number }
+	> = {}
+
+	entries.forEach(entry => {
 		const owner = (entry as EntryWithOwner)._owner
 		const ownerId = owner?.$jazz.id
 		if (!ownerId) return
-		
+
 		if (!scores[ownerId]) {
 			scores[ownerId] = {
 				name: owner?.profile?.name || "Unknown",
 				score: 0,
-				updates: 0
+				updates: 0,
 			}
 		}
-		
+
 		scores[ownerId].score += 10 // Mock points
 		scores[ownerId].updates += 1
 	})
-	
-	const leaderboard = Object.values(scores).sort((a,b) => b.score - a.score)
-	
+
+	const leaderboard = Object.values(scores).sort((a, b) => b.score - a.score)
+
 	return (
 		<Card>
 			<CardHeader>
@@ -437,23 +486,21 @@ function GroupLeaderboard({ group }: { group: Loaded<typeof IbaadahGroup> }) {
 					{leaderboard.map((user, index) => (
 						<div key={user.name} className="flex items-center justify-between">
 							<div className="flex items-center gap-3">
-								<div className="flex h-8 w-8 items-center justify-center rounded-full bg-muted font-bold">
+								<div className="bg-muted flex h-8 w-8 items-center justify-center rounded-full font-bold">
 									{index + 1}
 								</div>
 								<div>
 									<p className="font-medium">{user.name}</p>
-									<p className="text-xs text-muted-foreground">
+									<p className="text-muted-foreground text-xs">
 										{user.updates} entries
 									</p>
 								</div>
 							</div>
-							<div className="font-bold">
-								{user.score} pts
-							</div>
+							<div className="font-bold">{user.score} pts</div>
 						</div>
 					))}
 					{leaderboard.length === 0 && (
-						<p className="text-center text-muted-foreground py-4">
+						<p className="text-muted-foreground py-4 text-center">
 							No activity yet.
 						</p>
 					)}

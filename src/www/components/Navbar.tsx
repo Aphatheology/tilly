@@ -15,7 +15,7 @@ import {
 } from "#shared/ui/dropdown-menu"
 import { List } from "react-bootstrap-icons"
 import { IntlProvider, T } from "#shared/intl/setup"
-import { messagesDe, messagesEn, messagesAr } from "#shared/intl/messages"
+import { messagesEn, messagesAr } from "#shared/intl/messages"
 
 export { Navbar }
 

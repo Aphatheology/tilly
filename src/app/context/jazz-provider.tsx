@@ -5,4 +5,3 @@ export function useAccount() {
 	let me = useJazzAccount(UserAccount)
 	return { me }
 }
-
