@@ -252,6 +252,7 @@ const deUiMessages = translate(baseUiMessages, {
 	"form.cancel": "Abbrechen",
 	"form.save": "Speichern",
 	"form.saving": "Speichern...",
+	"form.remove": "Entfernen",
 
 	// Navigation messages
 	"nav.dashboard": "Dashboard",
