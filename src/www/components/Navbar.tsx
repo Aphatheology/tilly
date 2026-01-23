@@ -42,11 +42,9 @@ function Navbar({ logo, navigation, cta, locale, languages }: NavbarProps) {
 	let [mobileMenuOpen, setMobileMenuOpen] = useState(false)
 	let [langMenuOpen, setLangMenuOpen] = useState(false)
 	let [mobileLangMenuOpen, setMobileLangMenuOpen] = useState(false)
-	let currentLanguageEmoji =
-		locale === "ar" ? "🇸🇦" : locale === "de" ? "🇩🇪" : "🇺🇸"
+	let currentLanguageEmoji = locale === "ar" ? "🇸🇦" : "🇺🇸"
 
-	let messages =
-		locale === "ar" ? messagesAr : locale === "de" ? messagesDe : messagesEn
+	let messages = locale === "ar" ? messagesAr : messagesEn
 
 	return (
 		<IntlProvider

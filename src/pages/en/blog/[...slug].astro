@@ -32,7 +32,7 @@ let { Content } = await render(post)
 		locale="en"
 		client:load
 		logo={{
-			text: "Tilly",
+			text: "Hasiber",
 			href: "/en/",
 		}}
 		navigation={[
@@ -47,7 +47,7 @@ let { Content } = await render(post)
 		}}
 		languages={[
 			{ name: "English", href: `/en/blog/${post.id.replace("/en", "")}` },
-			{ name: "Deutsch", href: `/de/blog/${post.id.replace("/en", "")}` },
+			{ name: "العربية", href: `/ar/blog/${post.id.replace("/en", "")}` },
 		]}
 	/>
 
@@ -128,11 +128,11 @@ let { Content } = await render(post)
 			],
 			languages: [
 				{ name: "English", href: "/en/blog" },
-				{ name: "Deutsch", href: "/de/blog" },
+				{ name: "العربية", href: "/ar/blog" },
 			],
 		}}
 		company={{
-			name: "Tilly",
+			name: "Hasiber",
 		}}
 	/>
 </MinimalMarketingLayout>

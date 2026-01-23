@@ -1,15 +1,13 @@
-# Tilly Demo Prompts
+# Hasiber Demo Prompts
 
-## Reflecting Interactions
+## Reflecting on Ibaadah
 
-I had coffee with Sarah this morning. She's really excited about her ML project getting approved for production. Her cat Luna is completely recovered from the surgery now. Then I ran into Emma at the coffee shop later - she landed a huge restaurant rebranding client and seems so much happier about her finances.
+I prayed Fajr on time today and it felt really peaceful. Read Surah Yasin afterwards. Struggled a bit with Dhuhr because of work meetings, but managed to pray before Asr.
 
-I called Dad tonight. He finished that bookshelf he's been working on and it looks incredible. He's already planning a coffee table project for Mom. Also talked to Rachel at book club - her divorce was finally finalized and she seems relieved.
-
-Crazy day. Had lunch with Alex and he's training so hard for that climbing competition next month. Then the Chen family helped me carry groceries and Emma is loving her piano lessons. Oh, and Ben texted photos from some amazing new restaurant in Brooklyn.
+Visited my parents today, which counts as keeping family ties. Read 5 pages of Quran after Maghrib. Felt a bit distracted during Isha.
 
 ## Due Reminder Help
 
-I have a reminder to ask Sarah about her ML project progress. Can you help me write a casual message?
+I want to make sure I wake up for Tahajjud tonight. Can you help me set a gentle intention?
 
-I need to sign up for Maria's meditation workshop but I'm not sure what to say when I contact her.
+I need to calculate my Zakat for this year but I'm not sure where to start with the assets I have.

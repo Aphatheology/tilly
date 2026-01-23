@@ -57,6 +57,7 @@ const baseUiMessages = messages({
 	"form.cancel": "Cancel",
 	"form.save": "Save",
 	"form.saving": "Saving...",
+	"form.remove": "Remove",
 
 	// Navigation messages
 	"nav.dashboard": "Dashboard",

@@ -41,43 +41,24 @@ let localizedNav =
 					goToApp: "انتقل إلى التطبيق",
 				},
 			}
-		: locale === "de"
-			? {
-					home: "/de/",
-					features: "/de/#features",
-					pricing: "/de/#pricing",
-					faq: "/de/#faq",
-					blog: "/de/blog",
-					imprint: "/de/imprint",
-					privacy: "/de/privacy",
-					labels: {
-						features: "Funktionen",
-						pricing: "Tarife",
-						faq: "FAQ",
-						blog: "Blog",
-						imprint: "Impressum",
-						privacy: "Datenschutz",
-						goToApp: "Zur App",
-					},
-				}
-			: {
-					home: "/en/",
-					features: "/en/#features",
-					pricing: "/en/#pricing",
-					faq: "/en/#faq",
-					blog: "/en/blog",
-					imprint: "/en/imprint",
-					privacy: "/en/privacy",
-					labels: {
-						features: "Features",
-						pricing: "Pricing",
-						faq: "FAQ",
-						blog: "Blog",
-						imprint: "Imprint",
-						privacy: "Privacy",
-						goToApp: "Go to App",
-					},
-				}
+		: {
+				home: "/en/",
+				features: "/en/#features",
+				pricing: "/en/#pricing",
+				faq: "/en/#faq",
+				blog: "/en/blog",
+				imprint: "/en/imprint",
+				privacy: "/en/privacy",
+				labels: {
+					features: "Features",
+					pricing: "Pricing",
+					faq: "FAQ",
+					blog: "Blog",
+					imprint: "Imprint",
+					privacy: "Privacy",
+					goToApp: "Go to App",
+				},
+			}
 ---
 
 <!doctype html>
@@ -106,7 +87,7 @@ let localizedNav =
 			locale={locale}
 			client:load
 			logo={{
-				text: "Tilly",
+				text: "Hasiber",
 				href: localizedNav.home,
 			}}
 		navigation={[
@@ -121,7 +102,7 @@ let localizedNav =
 			}}
 			languages={[
 				{ name: "English", href: "/en/" },
-				{ name: "Deutsch", href: "/de/" },
+				{ name: "العربية", href: "/ar/" },
 			]}
 		/>
 
@@ -146,7 +127,6 @@ let localizedNav =
 				],
 			languages: [
 				{ name: "English", href: "/en/" },
-				{ name: "Deutsch", href: "/de/" },
 				{ name: "العربية", href: "/ar/" },
 			],
 		}}

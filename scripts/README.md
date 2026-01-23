@@ -1,6 +1,6 @@
 # Mock Data Generation
 
-This directory contains scripts and resources for generating realistic mock data for the Tilly app.
+This directory contains scripts and resources for generating realistic mock data for the Hasiber app.
 
 ## Structure
 

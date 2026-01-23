@@ -133,7 +133,7 @@ function LanguageSection() {
 
 	let currentLang = currentMe.root.language || "en"
 
-	function setLanguage(lang: "de" | "en" | "ar") {
+	function setLanguage(lang: "en" | "ar") {
 		currentMe.root.$jazz.set("language", lang)
 	}
 
@@ -153,9 +153,6 @@ function LanguageSection() {
 					<SelectContent className="w-full">
 						<SelectItem value="en">
 							<T k="language.name.en" />
-						</SelectItem>
-						<SelectItem value="de">
-							<T k="language.name.de" />
 						</SelectItem>
 						<SelectItem value="ar">
 							<T k="language.name.ar" />

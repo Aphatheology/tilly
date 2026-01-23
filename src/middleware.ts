@@ -7,8 +7,7 @@ export let onRequest = defineMiddleware(async (context, next) => {
 			?.split(",")[0]
 			.split("-")[0]
 			.toLowerCase()
-		let locale =
-			preferredLang === "ar" ? "ar" : preferredLang === "de" ? "de" : "en"
+		let locale = preferredLang === "ar" ? "ar" : "en"
 		console.log("Root redirect:", { acceptLanguage, preferredLang, locale })
 		return context.redirect(`/${locale}/`, 301)
 	}
@@ -28,11 +27,7 @@ export let onRequest = defineMiddleware(async (context, next) => {
 
 	if (response.status === 404) {
 		let pathname = context.url.pathname
-		let locale = pathname.startsWith("/ar")
-			? "ar"
-			: pathname.startsWith("/de")
-				? "de"
-				: "en"
+		let locale = pathname.startsWith("/ar") ? "ar" : "en"
 		let notFoundPage = `/${locale}/404`
 		console.log("404 rewrite:", { pathname, locale, notFoundPage })
 		return context.rewrite(notFoundPage)

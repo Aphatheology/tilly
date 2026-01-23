@@ -7,8 +7,8 @@ import { createRequire } from "node:module"
 let WIDTH = 1200
 let HEIGHT = 630
 
-let DEFAULT_HEADING = "Tilly.social"
-let DEFAULT_TAGLINE = "Be the Friend Who Remembers"
+let DEFAULT_HEADING = "Hasiber"
+let DEFAULT_TAGLINE = "Your Spiritual Journal"
 
 let FONT_FAMILY =
 	"Inter, system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif"
@@ -130,15 +130,15 @@ function renderOgTree(input: TemplateInput) {
 				flexDirection: "row", // Align icon and text container horizontally
 				alignItems: "center", // Vertically center the icon and the text block
 				padding: "80px",
-				color: "#050e0d",
-				background: "#f8fdfc",
+				color: "#F5F5F5",
+				background: "#1A3A3A",
 				fontFamily: FONT_FAMILY,
 				gap: "60px", // Space between the icon and the text content
 			}}
 		>
 			<img
 				src={input.iconSrc}
-				alt="Tilly icon"
+				alt="Hasiber icon"
 				style={{
 					width: "264px",
 					height: "264px",
@@ -171,7 +171,7 @@ function renderOgTree(input: TemplateInput) {
 					style={{
 						fontSize: "48px",
 						fontWeight: 700,
-						color: "#465a57",
+						color: "#B2D96F",
 						marginTop: "24px", // Add vertical space between heading and tagline
 					}}
 				>

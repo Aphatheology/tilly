@@ -8,10 +8,10 @@ export const prerender = true
 
 export async function getStaticPaths() {
 	let posts = await getCollection("blog")
-	let dePosts = posts.filter(post => post.id.endsWith("/de"))
+	let arPosts = posts.filter(post => post.id.endsWith("/ar"))
 
-	return dePosts.map(post => ({
-		params: { slug: post.id.replace("/de", "") },
+	return arPosts.map(post => ({
+		params: { slug: post.id.replace("/ar", "") },
 		props: { post },
 	}))
 }
@@ -29,25 +29,25 @@ let { Content } = await render(post)
 	ogImage={post.data.ogImage}
 >
 	<Navbar
-		locale="de"
+		locale="ar"
 		client:load
 		logo={{
-			text: "Tilly",
-			href: "/de/",
+			text: "Hasiber",
+			href: "/ar/",
 		}}
 		navigation={[
-			{ name: "Funktionen", href: "/de/#features" },
-			{ name: "Tarife", href: "/de/#experience" },
-			{ name: "FAQ", href: "/de/#faq" },
-			{ name: "Blog", href: "/de/blog" },
+			{ name: "المميزات", href: "/ar/#features" },
+			{ name: "الخطط", href: "/ar/#experience" },
+			{ name: "الأسئلة الشائعة", href: "/ar/#faq" },
+			{ name: "المدونة", href: "/ar/blog" },
 		]}
 		cta={{
-			text: "Zur App",
+			text: "انتقل إلى التطبيق",
 			href: "/app",
 		}}
 		languages={[
-			{ name: "English", href: `/en/blog/${post.id.replace("/de", "")}` },
-			{ name: "Deutsch", href: `/de/blog/${post.id.replace("/de", "")}` },
+			{ name: "English", href: `/en/blog/${post.id.replace("/ar", "")}` },
+			{ name: "العربية", href: `/ar/blog/${post.id.replace("/ar", "")}` },
 		]}
 	/>
 
@@ -55,10 +55,10 @@ let { Content } = await render(post)
 		<article class="prose prose-lg dark:prose-invert mx-auto max-w-3xl">
 			<div class="not-prose mb-8">
 				<a
-					href="/de/blog"
+					href="/ar/blog"
 					class="text-muted-foreground hover:text-foreground mb-4 inline-block text-sm transition-colors"
 				>
-					← Zurück zum Blog
+					← العودة إلى المدونة
 				</a>
 				<h1 class="text-4xl font-bold tracking-tight md:text-5xl">
 					{post.data.title}
@@ -102,12 +102,12 @@ let { Content } = await render(post)
 	<Footer
 		navigation={{
 			main: [
-				{ name: "Funktionen", href: "/de/#features" },
-				{ name: "Tarife", href: "/de/#experience" },
-				{ name: "FAQ", href: "/de/#faq" },
-				{ name: "Blog", href: "/de/blog" },
-				{ name: "Impressum", href: "/de/imprint" },
-				{ name: "Datenschutz", href: "/de/privacy" },
+				{ name: "المميزات", href: "/ar/#features" },
+				{ name: "الخطط", href: "/ar/#experience" },
+				{ name: "الأسئلة الشائعة", href: "/ar/#faq" },
+				{ name: "المدونة", href: "/ar/blog" },
+				{ name: "الطابع", href: "/ar/imprint" },
+				{ name: "الخصوصية", href: "/ar/privacy" },
 			],
 			social: [
 				{
@@ -128,11 +128,11 @@ let { Content } = await render(post)
 			],
 			languages: [
 				{ name: "English", href: "/en/blog" },
-				{ name: "Deutsch", href: "/de/blog" },
+				{ name: "العربية", href: "/ar/blog" },
 			],
 		}}
 		company={{
-			name: "Tilly",
+			name: "Hasiber",
 		}}
 	/>
 </MinimalMarketingLayout>

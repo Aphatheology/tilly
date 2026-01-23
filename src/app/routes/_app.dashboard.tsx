@@ -1,209 +1,160 @@
-import { createFileRoute, notFound } from "@tanstack/react-router"
+import {
+	createFileRoute,
+	Link,
+} from "@tanstack/react-router"
 import { useAccount } from "jazz-tools/react"
 import { UserAccount } from "#shared/schema/user"
-import { TypographyH1 } from "#shared/ui/typography"
-import {
-	Card,
-	CardContent,
-	CardDescription,
-	CardHeader,
-	CardTitle,
-} from "#shared/ui/card"
-import { Button } from "#shared/ui/button"
-import { T, useIntl } from "#shared/intl/setup"
+import type { ResolveQuery, Loaded } from "jazz-tools"
+import { PageHeader } from "#app/components/page-header"
+import { Button } from "#app/components/ui/button"
+import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "#app/components/ui/card"
+import { PointsBadge } from "#app/components/points/PointsBadge"
+import { ReflectionEditor } from "#app/features/reflection/ReflectionEditor"
+import { usePoints } from "#app/features/points/use-points"
 import { format } from "date-fns"
-import { Calendar, Book, Heart, HandIndex, Moon } from "react-bootstrap-icons"
-import type { ResolveQuery } from "jazz-tools"
-import { NewIbaadahEntry } from "#app/features/new-ibaadah-entry"
-import { NewIbaadahHabit } from "#app/features/new-ibaadah-habit"
+import { useState } from "react"
+import { Reflection, type ReflectionMood } from "#shared/schema/reflection"
+import { ArrowRight, CheckCircle } from "react-bootstrap-icons"
 
-export let Route = createFileRoute("/_app/dashboard")({
-	loader: async ({ context }) => {
-		if (!context.me) throw notFound()
-		let loadedMe = await UserAccount.load(context.me.$jazz.id, {
-			resolve: dashboardQuery,
-		})
-		if (!loadedMe.$isLoaded) throw notFound()
-		return { me: loadedMe }
-	},
-	component: DashboardScreen,
-})
-
-let dashboardQuery = {
+let dashboardResolve = {
 	root: {
-		ibaadahEntries: { $each: true },
-		ibaadahHabits: { $each: true },
-		ibaadahSettings: true,
+		reflections: { $each: true },
 	},
 } as const satisfies ResolveQuery<typeof UserAccount>
 
-function DashboardScreen() {
-	let t = useIntl()
-	let data = Route.useLoaderData()
-	let subscribedMe = useAccount(UserAccount, { resolve: dashboardQuery })
-	let currentMe = subscribedMe.$isLoaded ? subscribedMe : data.me
+export const Route = createFileRoute("/_app/dashboard")({
+	component: DashboardPage,
+})
 
-	let today = format(new Date(), "yyyy-MM-dd")
-	let allEntries = currentMe.root.ibaadahEntries
-		? Array.from(currentMe.root.ibaadahEntries.values())
-		: []
-	let todayEntries = allEntries.filter(entry => entry && entry.date === today)
+function DashboardPage() {
+	const me = useAccount(UserAccount, { resolve: dashboardResolve })
+	const { balance } = usePoints()
+
+	const [todaysReflection, setTodaysReflection] = useState<boolean>(() => {
+		if (!me.$isLoaded || !me.root?.reflections) return false
+		const today = new Date().toISOString().split("T")[0]
+		let reflections = Array.from(me.root.reflections.values()).filter(
+			(r): r is Loaded<typeof Reflection> =>
+				Boolean(r && r.$isLoaded),
+		)
+		return reflections.some(r => r.date === today && r.content)
+	})
+
+	const todayDate = format(new Date(), "EEEE, MMMM d")
+
+	const handleReflectionSubmit = (data: {
+		content: string
+		mood?: ReflectionMood
+		tags: string[]
+	}) => {
+		if (!me.$isLoaded || !me.root?.reflections) return
+		if (!me.root.reflections.$isLoaded) return
+
+		const reflection = Reflection.create({
+			version: 1,
+			content: data.content,
+			mood: data.mood,
+			tags: data.tags,
+			date: new Date().toISOString().split("T")[0],
+			createdAt: new Date(),
+			updatedAt: new Date(),
+		})
+
+		me.root.reflections.$jazz.push(reflection)
+		setTodaysReflection(true)
+	}
 
 	return (
-		<div className="space-y-8 pb-20 md:mt-12 md:pb-4">
-			<title>{t("dashboard.pageTitle")}</title>
-			<TypographyH1>
-				<T k="dashboard.title" />
-			</TypographyH1>
+		<div className="space-y-8 pb-12">
+			<PageHeader
+				title="Welcome Back"
+				description={todayDate}
+				actions={<PointsBadge />}
+			/>
 
 			<div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
-				<IbaadahQuickCard
-					type="salah"
-					icon={Calendar}
-					title={t("dashboard.salah.title")}
-					description={t("dashboard.salah.description")}
-					todayCount={todayEntries.filter(e => e?.type === "salah").length}
-				/>
-				<IbaadahQuickCard
-					type="quran"
-					icon={Book}
-					title={t("dashboard.quran.title")}
-					description={t("dashboard.quran.description")}
-					todayCount={todayEntries.filter(e => e?.type === "quran").length}
-				/>
-				<IbaadahQuickCard
-					type="dhikr"
-					icon={Heart}
-					title={t("dashboard.dhikr.title")}
-					description={t("dashboard.dhikr.description")}
-					todayCount={todayEntries.filter(e => e?.type === "dhikr").length}
-				/>
-				<IbaadahQuickCard
-					type="sadaqa"
-					icon={HandIndex}
-					title={t("dashboard.sadaqa.title")}
-					description={t("dashboard.sadaqa.description")}
-					todayCount={todayEntries.filter(e => e?.type === "sadaqa").length}
-				/>
-				<IbaadahQuickCard
-					type="fasting"
-					icon={Moon}
-					title={t("dashboard.fasting.title")}
-					description={t("dashboard.fasting.description")}
-					todayCount={todayEntries.filter(e => e?.type === "fasting").length}
-				/>
-			</div>
-
-			<Card>
-				<CardHeader>
-					<CardTitle>
-						<T k="dashboard.todayProgress.title" />
-					</CardTitle>
-					<CardDescription>
-						<T k="dashboard.todayProgress.description" />
-					</CardDescription>
-				</CardHeader>
-				<CardContent>
-					<div className="text-2xl font-bold">
-						{todayEntries.length} <T k="dashboard.todayProgress.entries" />
-					</div>
-				</CardContent>
-			</Card>
-
-			{currentMe.root.ibaadahHabits && (
-				<Card>
+				{/* Ibaadah Summary Card */}
+				<Card className="col-span-full md:col-span-2 lg:col-span-2">
 					<CardHeader>
-						<div className="flex items-center justify-between">
-							<div>
-								<CardTitle>
-									<T k="dashboard.customHabits.title" />
-								</CardTitle>
-								<CardDescription>
-									<T k="dashboard.customHabits.description" />
-								</CardDescription>
-							</div>
-							<NewIbaadahHabit>
-								<Button size="sm">
-									<T k="dashboard.customHabits.add" />
-								</Button>
-							</NewIbaadahHabit>
-						</div>
+						<CardTitle>Today&apos;s Ibaadah</CardTitle>
+						<CardDescription>Keep up your spiritual consistency.</CardDescription>
 					</CardHeader>
 					<CardContent>
-						{Array.from(currentMe.root.ibaadahHabits.values()).length === 0 ? (
-							<div className="text-muted-foreground py-4 text-center">
-								<T k="dashboard.customHabits.empty" />
+						<div className="flex flex-col gap-4">
+							<p className="text-muted-foreground">
+								Track your prayers, reading, and charity.
+							</p>
+							<div className="flex gap-4">
+								<Button asChild>
+									<Link to="/ibaadah">
+										<CheckCircle className="mr-2 h-4 w-4" />
+										Go to Tracker
+									</Link>
+								</Button>
+								<Button variant="outline" asChild>
+									<a href="/app/points">
+										<ArrowRight className="mr-2 h-4 w-4" />
+										View Points History
+									</a>
+								</Button>
+							</div>
+						</div>
+					</CardContent>
+				</Card>
+
+				{/* Points Card */}
+				<Card>
+					<CardHeader>
+						<CardTitle className="flex items-center gap-2">
+							Your Journey
+							<span className="text-2xl">✨</span>
+						</CardTitle>
+					</CardHeader>
+					<CardContent>
+						<div className="text-3xl font-bold">{balance} Pts</div>
+						<p className="text-sm text-muted-foreground mt-2">
+							You&apos;re doing great!
+						</p>
+					</CardContent>
+				</Card>
+			</div>
+
+			{/* Daily Reflection Section */}
+			<section className="space-y-4">
+				<div className="flex items-center justify-between">
+					<h2 className="text-2xl font-bold tracking-tight">Daily Reflection</h2>
+					<Button asChild variant="ghost" size="sm">
+						<a href="/app/reflections">
+							View All
+							<ArrowRight className="ml-2 h-4 w-4" />
+						</a>
+					</Button>
+				</div>
+				
+				<Card className="bg-muted/30">
+					<CardContent className="pt-6">
+						{todaysReflection ? (
+							<div className="flex flex-col items-center justify-center p-6 text-center">
+								<div className="rounded-full bg-green-100 p-3">
+									<CheckCircle className="h-6 w-6 text-green-600" />
+								</div>
+								<h3 className="mt-4 text-lg font-semibold">Reflection Completed</h3>
+								<p className="text-muted-foreground">
+									You&apos;ve captured your thoughts for today. MashaAllah!
+								</p>
+								<Button asChild variant="outline" className="mt-4">
+									<a href="/app/reflections">Read Reflections</a>
+								</Button>
 							</div>
 						) : (
-							<div className="space-y-2">
-								{Array.from(currentMe.root.ibaadahHabits.values())
-									.filter(h => h && h.enabled !== false)
-									.map(habit => (
-										<div
-											key={habit.$jazz.id}
-											className="flex items-center justify-between rounded-lg border p-3"
-										>
-											<div>
-												<div className="font-medium">{habit.name}</div>
-												{habit.description && (
-													<div className="text-muted-foreground text-sm">
-														{habit.description}
-													</div>
-												)}
-											</div>
-										</div>
-									))}
-							</div>
+							<ReflectionEditor
+								onSubmit={handleReflectionSubmit}
+								onCancel={() => {}} 
+							/>
 						)}
 					</CardContent>
 				</Card>
-			)}
+			</section>
 		</div>
-	)
-}
-
-function IbaadahQuickCard({
-	type,
-	icon: Icon,
-	title,
-	description,
-	todayCount,
-}: {
-	type: string
-	icon: React.ComponentType<{ className?: string }>
-	title: string
-	description: string
-	todayCount: number
-}) {
-	return (
-		<Card>
-			<CardHeader>
-				<div className="flex items-center gap-2">
-					<Icon className="size-5" />
-					<CardTitle>{title}</CardTitle>
-				</div>
-				<CardDescription>{description}</CardDescription>
-			</CardHeader>
-			<CardContent>
-				<div className="flex items-center justify-between">
-					<div className="text-2xl font-bold">{todayCount}</div>
-					<NewIbaadahEntry
-						type={
-							type as
-								| "salah"
-								| "quran"
-								| "dhikr"
-								| "sadaqa"
-								| "fasting"
-								| "custom"
-						}
-					>
-						<Button size="sm" variant="outline">
-							<T k="dashboard.add" />
-						</Button>
-					</NewIbaadahEntry>
-				</div>
-			</CardContent>
-		</Card>
 	)
 }

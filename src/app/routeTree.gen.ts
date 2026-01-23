@@ -20,6 +20,7 @@ import { Route as AppIbaadahRouteImport } from './routes/_app.ibaadah'
 import { Route as AppGroupsRouteImport } from './routes/_app.groups'
 import { Route as AppDashboardRouteImport } from './routes/_app.dashboard'
 import { Route as AppAssistantRouteImport } from './routes/_app.assistant'
+import { Route as AppAdhkaarRouteImport } from './routes/_app.adhkaar'
 import { Route as AppPeopleIndexRouteImport } from './routes/_app.people.index'
 import { Route as AppPeoplePersonIDRouteImport } from './routes/_app.people.$personID'
 import { Route as AppGroupsGroupIDRouteImport } from './routes/_app.groups.$groupID'
@@ -78,6 +79,11 @@ const AppAssistantRoute = AppAssistantRouteImport.update({
   path: '/assistant',
   getParentRoute: () => AppRoute,
 } as any)
+const AppAdhkaarRoute = AppAdhkaarRouteImport.update({
+  id: '/adhkaar',
+  path: '/adhkaar',
+  getParentRoute: () => AppRoute,
+} as any)
 const AppPeopleIndexRoute = AppPeopleIndexRouteImport.update({
   id: '/people/',
   path: '/people/',
@@ -97,6 +103,7 @@ const AppGroupsGroupIDRoute = AppGroupsGroupIDRouteImport.update({
 export interface FileRoutesByFullPath {
   '/': typeof IndexRoute
   '/tour': typeof TourRoute
+  '/adhkaar': typeof AppAdhkaarRoute
   '/assistant': typeof AppAssistantRoute
   '/dashboard': typeof AppDashboardRoute
   '/groups': typeof AppGroupsRouteWithChildren
@@ -107,11 +114,12 @@ export interface FileRoutesByFullPath {
   '/settings': typeof AppSettingsRoute
   '/groups/$groupID': typeof AppGroupsGroupIDRoute
   '/people/$personID': typeof AppPeoplePersonIDRoute
-  '/people/': typeof AppPeopleIndexRoute
+  '/people': typeof AppPeopleIndexRoute
 }
 export interface FileRoutesByTo {
   '/': typeof IndexRoute
   '/tour': typeof TourRoute
+  '/adhkaar': typeof AppAdhkaarRoute
   '/assistant': typeof AppAssistantRoute
   '/dashboard': typeof AppDashboardRoute
   '/groups': typeof AppGroupsRouteWithChildren
@@ -129,6 +137,7 @@ export interface FileRoutesById {
   '/': typeof IndexRoute
   '/_app': typeof AppRouteWithChildren
   '/tour': typeof TourRoute
+  '/_app/adhkaar': typeof AppAdhkaarRoute
   '/_app/assistant': typeof AppAssistantRoute
   '/_app/dashboard': typeof AppDashboardRoute
   '/_app/groups': typeof AppGroupsRouteWithChildren
@@ -146,6 +155,7 @@ export interface FileRouteTypes {
   fullPaths:
     | '/'
     | '/tour'
+    | '/adhkaar'
     | '/assistant'
     | '/dashboard'
     | '/groups'
@@ -156,11 +166,12 @@ export interface FileRouteTypes {
     | '/settings'
     | '/groups/$groupID'
     | '/people/$personID'
-    | '/people/'
+    | '/people'
   fileRoutesByTo: FileRoutesByTo
   to:
     | '/'
     | '/tour'
+    | '/adhkaar'
     | '/assistant'
     | '/dashboard'
     | '/groups'
@@ -177,6 +188,7 @@ export interface FileRouteTypes {
     | '/'
     | '/_app'
     | '/tour'
+    | '/_app/adhkaar'
     | '/_app/assistant'
     | '/_app/dashboard'
     | '/_app/groups'
@@ -208,7 +220,7 @@ declare module '@tanstack/react-router' {
     '/_app': {
       id: '/_app'
       path: ''
-      fullPath: '/'
+      fullPath: ''
       preLoaderRoute: typeof AppRouteImport
       parentRoute: typeof rootRouteImport
     }
@@ -275,10 +287,17 @@ declare module '@tanstack/react-router' {
       preLoaderRoute: typeof AppAssistantRouteImport
       parentRoute: typeof AppRoute
     }
+    '/_app/adhkaar': {
+      id: '/_app/adhkaar'
+      path: '/adhkaar'
+      fullPath: '/adhkaar'
+      preLoaderRoute: typeof AppAdhkaarRouteImport
+      parentRoute: typeof AppRoute
+    }
     '/_app/people/': {
       id: '/_app/people/'
       path: '/people'
-      fullPath: '/people/'
+      fullPath: '/people'
       preLoaderRoute: typeof AppPeopleIndexRouteImport
       parentRoute: typeof AppRoute
     }
@@ -312,6 +331,7 @@ const AppGroupsRouteWithChildren = AppGroupsRoute._addFileChildren(
 )
 
 interface AppRouteChildren {
+  AppAdhkaarRoute: typeof AppAdhkaarRoute
   AppAssistantRoute: typeof AppAssistantRoute
   AppDashboardRoute: typeof AppDashboardRoute
   AppGroupsRoute: typeof AppGroupsRouteWithChildren
@@ -325,6 +345,7 @@ interface AppRouteChildren {
 }
 
 const AppRouteChildren: AppRouteChildren = {
+  AppAdhkaarRoute: AppAdhkaarRoute,
   AppAssistantRoute: AppAssistantRoute,
   AppDashboardRoute: AppDashboardRoute,
   AppGroupsRoute: AppGroupsRouteWithChildren,

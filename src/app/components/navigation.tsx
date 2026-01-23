@@ -83,10 +83,10 @@ function Navigation({ dueReminderCount }: { dueReminderCount: number }) {
 					)}
 				>
 					<NavBarButton
-						key="/dashboard"
-						to="/dashboard"
-						label={<T k="nav.dashboard" />}
-						onClick={() => handleNavClick("/dashboard")}
+						key="/ibaadah"
+						to="/ibaadah"
+						label={<T k="nav.ibaadah" />}
+						onClick={() => handleNavClick("/ibaadah")}
 						activeIcon={CalendarFill}
 						inactiveIcon={Calendar}
 					/>

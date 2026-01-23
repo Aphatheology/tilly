@@ -15,7 +15,7 @@ export const Route = createFileRoute("/")({
 	loader: () => {
 		let tourSkipped = useAppStore.getState().tourSkipped
 		if (tourSkipped) {
-			throw redirect({ to: "/people" })
+			throw redirect({ to: "/ibaadah" })
 		}
 		return null
 	},
@@ -50,7 +50,7 @@ function WelcomeIndex() {
 						transition={{ delay: 0.4 }}
 					>
 						<Button variant="outline" asChild>
-							<Link to="/people" onClick={() => setTourSkipped(true)}>
+							<Link to="/ibaadah" onClick={() => setTourSkipped(true)}>
 								<SkipForwardFill />
 								<T k="welcome.skip" />
 							</Link>

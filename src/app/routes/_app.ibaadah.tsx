@@ -9,7 +9,6 @@ import { type ResolveQuery } from "jazz-tools"
 import { IbaadahEntryListItem } from "#app/features/ibaadah-entry-list-item"
 import { TypographyH1 } from "#shared/ui/typography"
 import { Button } from "#shared/ui/button"
-import { Input } from "#shared/ui/input"
 import {
 	Empty,
 	EmptyDescription,
@@ -17,9 +16,8 @@ import {
 	EmptyMedia,
 	EmptyTitle,
 } from "#shared/ui/empty"
-import { Plus, X, Search, Calendar } from "react-bootstrap-icons"
-import { useAutoFocusInput } from "#app/hooks/use-auto-focus-input"
-import { useDeferredValue, useId, type ReactNode, type RefObject } from "react"
+import { Plus, Calendar as CalendarIcon } from "react-bootstrap-icons"
+import { type ReactNode } from "react"
 import { NewIbaadahEntry } from "#app/features/new-ibaadah-entry"
 import { T, useIntl } from "#shared/intl/setup"
 import { IbaadahEntry } from "#shared/schema/ibaadah"
@@ -29,21 +27,15 @@ import {
 	useWindowVirtualizer,
 } from "@tanstack/react-virtual"
 import { cn } from "#app/lib/utils"
-import {
-	Select,
-	SelectContent,
-	SelectItem,
-	SelectTrigger,
-	SelectValue,
-} from "#shared/ui/select"
 import { useState } from "react"
-import type { IbaadahType } from "#shared/schema/ibaadah"
+import { IbaadahCalendar } from "#app/features/ibaadah-calendar"
+import { format, parseISO } from "date-fns"
 
 export let Route = createFileRoute("/_app/ibaadah")({
 	loader: async ({ context }) => {
 		if (!context.me) throw notFound()
 		let loadedMe = await UserAccount.load(context.me.$jazz.id, {
-			resolve,
+			resolve: ibaadahResolve,
 		})
 		if (!loadedMe.$isLoaded) throw notFound()
 		return { me: loadedMe }
@@ -51,7 +43,7 @@ export let Route = createFileRoute("/_app/ibaadah")({
 	component: IbaadahEntries,
 })
 
-let resolve = {
+let ibaadahResolve = {
 	root: {
 		ibaadahEntries: { $each: true },
 	},
@@ -60,14 +52,12 @@ let resolve = {
 function IbaadahEntries() {
 	let { me: data } = Route.useLoaderData()
 
-	let subscribedMe = useAccount(UserAccount, { resolve })
+	let subscribedMe = useAccount(UserAccount, { resolve: ibaadahResolve })
 
 	let currentMe = subscribedMe.$isLoaded ? subscribedMe : data
 
-	let [searchQuery, setSearchQuery] = useState("")
-	let [typeFilter, setTypeFilter] = useState<IbaadahType | "all">("all")
-	let [dateFilter, setDateFilter] = useState("")
-	let deferredSearchQuery = useDeferredValue(searchQuery)
+	let today = format(new Date(), "yyyy-MM-dd")
+	let [selectedDate, setSelectedDate] = useState<string | null>(today)
 
 	let allEntries = Array.from(
 		currentMe.root.ibaadahEntries?.values() || [],
@@ -75,85 +65,21 @@ function IbaadahEntries() {
 		(e): e is Extract<typeof e, { $isLoaded: true }> => e?.$isLoaded === true,
 	)
 
-	let filteredEntries = allEntries.filter(entry => {
-		if (typeFilter !== "all" && entry.type !== typeFilter) return false
+	let displayedEntries = selectedDate
+		? allEntries.filter(e => e.date === selectedDate)
+		: []
 
-		if (dateFilter && entry.date !== dateFilter) return false
-
-		if (deferredSearchQuery) {
-			let query = deferredSearchQuery.toLowerCase()
-			let matchesType = entry.type.toLowerCase().includes(query)
-			let matchesNotes = entry.notes?.toLowerCase().includes(query)
-			let matchesReflection = entry.reflection?.toLowerCase().includes(query)
-
-			let matchesValue = false
-			switch (entry.value.type) {
-				case "salah":
-					matchesValue = entry.value.prayers.some(p =>
-						p.toLowerCase().includes(query),
-					)
-					break
-				case "quran":
-					matchesValue =
-						entry.value.pages?.toString().includes(query) ||
-						entry.value.minutes?.toString().includes(query) ||
-						false
-					break
-				case "dhikr":
-					matchesValue =
-						entry.value.count.toString().includes(query) ||
-						entry.value.dhikrType?.toLowerCase().includes(query) ||
-						false
-					break
-				case "sadaqa":
-					matchesValue =
-						entry.value.amount?.toString().includes(query) ||
-						entry.value.description?.toLowerCase().includes(query) ||
-						false
-					break
-				case "fasting":
-					matchesValue = query.includes("fasting") || query.includes("ramadan")
-					break
-				case "custom":
-					matchesValue = entry.value.value.toLowerCase().includes(query)
-					break
-			}
-
-			if (
-				!matchesType &&
-				!matchesNotes &&
-				!matchesReflection &&
-				!matchesValue
-			) {
-				return false
-			}
-		}
-
-		return true
-	})
-
-	let sortedEntries = [...filteredEntries].sort((a, b) => {
-		if (a.date !== b.date) {
-			return b.date.localeCompare(a.date)
-		}
+	let sortedEntries = [...displayedEntries].sort((a, b) => {
 		return b.createdAt.getTime() - a.createdAt.getTime()
 	})
 
 	let virtualItems: Array<VirtualItem> = []
 	virtualItems.push({ type: "heading" })
+	virtualItems.push({ type: "calendar" })
 
-	if (allEntries.length > 0) {
-		virtualItems.push({ type: "filters" })
-	} else {
-		virtualItems.push({ type: "no-entries" })
-	}
-
-	if (allEntries.length > 0) {
+	if (selectedDate) {
 		if (sortedEntries.length === 0) {
-			virtualItems.push({
-				type: "no-results",
-				searchQuery: deferredSearchQuery,
-			})
+			virtualItems.push({ type: "no-entries-for-date", date: selectedDate })
 		} else {
 			sortedEntries.forEach(entry => {
 				virtualItems.push({
@@ -161,9 +87,12 @@ function IbaadahEntries() {
 					entry,
 				})
 			})
-			virtualItems.push({ type: "spacer" })
 		}
+	} else {
+		virtualItems.push({ type: "select-date" })
 	}
+
+	virtualItems.push({ type: "spacer" })
 
 	let scrollEntry = useElementScrollRestoration({
 		getElement: () => window,
@@ -222,13 +151,10 @@ function IbaadahEntries() {
 							style={{ transform: `translateY(${virtualRow.start}px)` }}
 						>
 							{renderVirtualItem(item, {
-								searchQuery: deferredSearchQuery,
 								me: currentMe,
-								setSearchQuery,
-								typeFilter,
-								setTypeFilter,
-								dateFilter,
-								setDateFilter,
+								allEntries,
+								selectedDate,
+								setSelectedDate,
 							})}
 						</div>
 					)
@@ -240,41 +166,49 @@ function IbaadahEntries() {
 
 type VirtualItem =
 	| { type: "heading" }
-	| { type: "filters" }
+	| { type: "calendar" }
 	| {
 			type: "entry"
 			entry: co.loaded<typeof IbaadahEntry>
 	  }
-	| { type: "no-results"; searchQuery: string }
-	| { type: "no-entries" }
+	| { type: "no-entries-for-date"; date: string }
+	| { type: "select-date" }
 	| { type: "spacer" }
 
 function renderVirtualItem(
 	item: VirtualItem,
 	options: {
-		searchQuery: string
 		me: co.loaded<typeof UserAccount>
-		setSearchQuery: (query: string) => void
-		typeFilter: IbaadahType | "all"
-		setTypeFilter: (filter: IbaadahType | "all") => void
-		dateFilter: string
-		setDateFilter: (filter: string) => void
+		allEntries: Array<co.loaded<typeof IbaadahEntry>>
+		selectedDate: string | null
+		setSelectedDate: (date: string | null) => void
 	},
 ): ReactNode {
 	switch (item.type) {
 		case "heading":
 			return <HeadingSection />
 
-		case "filters":
+		case "calendar":
 			return (
-				<FiltersSection
-					searchQuery={options.searchQuery}
-					setSearchQuery={options.setSearchQuery}
-					typeFilter={options.typeFilter}
-					setTypeFilter={options.setTypeFilter}
-					dateFilter={options.dateFilter}
-					setDateFilter={options.setDateFilter}
-				/>
+				<div>
+					<IbaadahCalendar
+						entries={options.allEntries}
+						selectedDate={options.selectedDate}
+						onDateSelect={options.setSelectedDate}
+					/>
+					{options.selectedDate && (
+						<div className="mb-4 flex justify-end">
+							<NewIbaadahEntry date={options.selectedDate}>
+								<Button>
+									<Plus className="size-4" />
+									<span className="ml-2">
+										<T k="ibaadah.record" />
+									</span>
+								</Button>
+							</NewIbaadahEntry>
+						</div>
+					)}
+				</div>
 			)
 
 		case "entry":
@@ -282,15 +216,15 @@ function renderVirtualItem(
 				<IbaadahEntryListItem
 					entry={item.entry}
 					me={options.me}
-					searchQuery={options.searchQuery}
+					searchQuery=""
 				/>
 			)
 
-		case "no-results":
-			return <NoSearchResultsState searchQuery={item.searchQuery} />
+		case "no-entries-for-date":
+			return <NoEntriesForDateState date={item.date} />
 
-		case "no-entries":
-			return <NoEntriesState />
+		case "select-date":
+			return <SelectDateState />
 
 		case "spacer":
 			return <Spacer />
@@ -313,100 +247,29 @@ function HeadingSection() {
 	)
 }
 
-function FiltersSection({
-	searchQuery,
-	setSearchQuery,
-	typeFilter,
-	setTypeFilter,
-	dateFilter,
-	setDateFilter,
-}: {
-	searchQuery: string
-	setSearchQuery: (query: string) => void
-	typeFilter: IbaadahType | "all"
-	setTypeFilter: (filter: IbaadahType | "all") => void
-	dateFilter: string
-	setDateFilter: (filter: string) => void
-}) {
-	let autoFocusRef = useAutoFocusInput() as RefObject<HTMLInputElement>
-	let t = useIntl()
-	let searchInputId = useId()
+function NoEntriesForDateState({ date }: { date: string }) {
+	let formattedDate = format(parseISO(date), "EEEE, MMMM d, yyyy")
 
 	return (
-		<div className="mt-6 mb-3 flex flex-col gap-3 md:flex-row md:items-center md:justify-end">
-			<div className="relative w-full md:w-auto md:flex-1">
-				<label htmlFor={searchInputId} className="sr-only">
-					{t("reminders.search.placeholder")}
-				</label>
-				<Search className="text-muted-foreground absolute top-1/2 left-3 size-4 -translate-y-1/2 transform" />
-				<Input
-					ref={autoFocusRef}
-					id={searchInputId}
-					name="ibaadah-search"
-					type="search"
-					enterKeyHint="search"
-					placeholder={t("reminders.search.placeholder")}
-					value={searchQuery}
-					onChange={e => setSearchQuery(e.target.value)}
-					className="w-full pl-10"
-				/>
-			</div>
-			{searchQuery !== "" ? (
-				<Button variant="outline" onClick={() => setSearchQuery("")}>
-					<X className="size-4" />
-					<span className="sr-only md:not-sr-only">
-						<T k="common.clear" />
-					</span>
-				</Button>
-			) : null}
-			<Select
-				value={typeFilter}
-				onValueChange={v => setTypeFilter(v as IbaadahType | "all")}
-			>
-				<SelectTrigger className="w-full md:w-[180px]">
-					<SelectValue placeholder={t("ibaadah.entries.filter.type")} />
-				</SelectTrigger>
-				<SelectContent>
-					<SelectItem value="all">
-						<T k="common.all" />
-					</SelectItem>
-					<SelectItem value="salah">
-						<T k="dashboard.salah.title" />
-					</SelectItem>
-					<SelectItem value="quran">
-						<T k="dashboard.quran.title" />
-					</SelectItem>
-					<SelectItem value="dhikr">
-						<T k="dashboard.dhikr.title" />
-					</SelectItem>
-					<SelectItem value="sadaqa">
-						<T k="dashboard.sadaqa.title" />
-					</SelectItem>
-					<SelectItem value="fasting">
-						<T k="dashboard.fasting.title" />
-					</SelectItem>
-					<SelectItem value="custom">
-						<T k="ibaadah.habit.form.type.custom" />
-					</SelectItem>
-				</SelectContent>
-			</Select>
-			<Input
-				type="date"
-				value={dateFilter}
-				onChange={e => setDateFilter(e.target.value)}
-				className="w-full md:w-[180px]"
-				placeholder={t("ibaadah.entries.filter.date")}
-			/>
-			{dateFilter !== "" ? (
-				<Button variant="outline" onClick={() => setDateFilter("")}>
-					<X className="size-4" />
-				</Button>
-			) : null}
-			<NewIbaadahEntry>
+		<div className="flex flex-col items-center justify-center gap-4 py-8 text-center">
+			<Empty>
+				<EmptyHeader>
+					<EmptyMedia variant="icon">
+						<CalendarIcon />
+					</EmptyMedia>
+					<EmptyTitle>
+						<T k="ibaadah.entries.empty.forDate" />
+					</EmptyTitle>
+					<EmptyDescription>
+						{formattedDate}
+					</EmptyDescription>
+				</EmptyHeader>
+			</Empty>
+			<NewIbaadahEntry date={date}>
 				<Button>
 					<Plus className="size-4" />
-					<span className="sr-only md:not-sr-only">
-						<T k="dashboard.add" />
+					<span className="ml-2">
+						<T k="ibaadah.record" />
 					</span>
 				</Button>
 			</NewIbaadahEntry>
@@ -414,42 +277,19 @@ function FiltersSection({
 	)
 }
 
-function NoEntriesState() {
+function SelectDateState() {
 	return (
-		<div className="flex flex-col items-center justify-center gap-8 py-12 text-center">
+		<div className="flex flex-col items-center justify-center gap-4 py-12 text-center">
 			<Empty>
 				<EmptyHeader>
 					<EmptyMedia variant="icon">
-						<Calendar />
+						<CalendarIcon />
 					</EmptyMedia>
 					<EmptyTitle>
-						<T k="ibaadah.entries.empty" />
+						<T k="ibaadah.calendar.selectDate" />
 					</EmptyTitle>
 					<EmptyDescription>
-						<T k="ibaadah.entries.empty.description" />
-					</EmptyDescription>
-				</EmptyHeader>
-			</Empty>
-		</div>
-	)
-}
-
-function NoSearchResultsState({ searchQuery }: { searchQuery: string }) {
-	return (
-		<div className="container mx-auto max-w-6xl px-3 py-6">
-			<Empty>
-				<EmptyHeader>
-					<EmptyMedia variant="icon">
-						<Search />
-					</EmptyMedia>
-					<EmptyTitle>
-						<T
-							k="reminders.noResults.message"
-							params={{ query: searchQuery }}
-						/>
-					</EmptyTitle>
-					<EmptyDescription>
-						<T k="reminders.noResults.suggestion" />
+						<T k="ibaadah.calendar.selectDate.description" />
 					</EmptyDescription>
 				</EmptyHeader>
 			</Empty>
@@ -460,3 +300,4 @@ function NoSearchResultsState({ searchQuery }: { searchQuery: string }) {
 function Spacer() {
 	return <div className="h-20" />
 }
+

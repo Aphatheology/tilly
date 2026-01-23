@@ -8,7 +8,7 @@ import {
 import { UserAccount } from "#shared/schema/user"
 import { routeTree } from "#app/routeTree.gen"
 import { IntlProvider } from "#shared/intl/setup"
-import { messagesDe, messagesAr, messagesEn } from "#shared/intl/messages"
+import { messagesAr, messagesEn } from "#shared/intl/messages"
 import { useSyncUserIdToServiceWorker } from "#app/lib/service-worker"
 import { PWAContext, usePWAProvider } from "#app/lib/pwa"
 import { SplashScreen } from "./components/splash-screen"
@@ -81,16 +81,6 @@ function RouterWithJazz() {
 	// Only show splash screen if account is still loading
 	if (me.$jazz.loadingState === "loading") return <SplashScreen />
 
-	if (locale === "de") {
-		return (
-			<IntlProvider
-				messages={messagesDe as unknown as typeof messagesEn}
-				locale="de"
-			>
-				<RouterProvider router={router} context={{ me: contextMe }} />
-			</IntlProvider>
-		)
-	}
 	if (locale === "ar") {
 		return (
 			<IntlProvider

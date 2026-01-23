@@ -1,6 +1,6 @@
-# Tilly
+# Hasiber
 
-Local-first PWA for personal CRM, built with Jazz and AI SDK.
+Local-first PWA for Muslim spiritual journal, built with Jazz and AI SDK.
 
 ## Essentials
 

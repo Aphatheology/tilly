@@ -5,8 +5,12 @@ import {
 	IbaadahEntry,
 	IbaadahHabit,
 	IbaadahSettings,
+	CustomNawaafilTemplate,
+	CustomDhikrTemplate,
 } from "#shared/schema/ibaadah"
 import { IbaadahGroup } from "#shared/schema/group"
+import { Reflection } from "#shared/schema/reflection"
+import { PointsHistory } from "#shared/schema/points"
 
 export {
 	isDeleted,
@@ -114,7 +118,7 @@ export let UserAccountRoot = co.map({
 	inactivePeople: co.list(Person).optional(),
 	notificationSettings: NotificationSettings.optional(),
 	usageTracking: UsageTracking.optional(),
-	language: z.enum(["de", "en", "ar"]).optional(),
+	language: z.enum(["en", "ar"]).optional(),
 	theme: z
 		.enum(["current", "hasiber", "current-dark", "hasiber-dark"])
 		.optional(),
@@ -123,6 +127,11 @@ export let UserAccountRoot = co.map({
 	ibaadahHabits: co.list(IbaadahHabit).optional(),
 	ibaadahSettings: IbaadahSettings.optional(),
 	ibaadahGroups: co.list(IbaadahGroup).optional(),
+	customNawaafilTemplates: co.list(CustomNawaafilTemplate).optional(),
+	customDhikrTemplates: co.list(CustomDhikrTemplate).optional(),
+	reflections: co.list(Reflection).optional(),
+	pointsBalance: z.number().optional(),
+	pointsHistory: co.list(PointsHistory).optional(),
 	migrationVersion: z.number().optional(),
 })
 
@@ -185,9 +194,7 @@ function initializeRootIfUndefined(
 					typeof navigator !== "undefined"
 						? navigator.language.startsWith("ar")
 							? "ar"
-							: navigator.language.startsWith("de")
-								? "de"
-								: "en"
+							: "en"
 						: "en",
 				theme: defaultTheme,
 				assistant: Assistant.create({
@@ -206,6 +213,11 @@ function initializeRootIfUndefined(
 					},
 					enableReminders: true,
 				}),
+				customNawaafilTemplates: co.list(CustomNawaafilTemplate).create([]),
+				customDhikrTemplates: co.list(CustomDhikrTemplate).create([]),
+				reflections: co.list(Reflection).create([]),
+				pointsBalance: 0,
+				pointsHistory: co.list(PointsHistory).create([]),
 				migrationVersion: 1,
 			}),
 		)
@@ -263,6 +275,18 @@ async function runMigrationV1(
 
 	if (!root.ibaadahGroups) {
 		root.$jazz.set("ibaadahGroups", co.list(IbaadahGroup).create([]))
+	}
+
+	if (!root.reflections) {
+		root.$jazz.set("reflections", co.list(Reflection).create([]))
+	}
+
+	if (root.pointsBalance === undefined) {
+		root.$jazz.set("pointsBalance", 0)
+	}
+
+	if (!root.pointsHistory) {
+		root.$jazz.set("pointsHistory", co.list(PointsHistory).create([]))
 	}
 
 	for (let person of root.people.values()) {

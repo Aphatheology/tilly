@@ -39,6 +39,7 @@ import { tryCatch } from "#shared/lib/trycatch"
 import { TextHighlight } from "#shared/ui/text-highlight"
 import { transformFormDataToIbaadahValue } from "./ibaadah-form"
 import type { IbaadahType, SalahPrayer } from "#shared/schema/ibaadah"
+import { getSurahByNumber } from "#shared/data/quran-data"
 
 export { IbaadahEntryListItem }
 
@@ -88,6 +89,39 @@ function IbaadahEntryListItem({
 			}
 			case "quran": {
 				let parts: string[] = []
+				if ("values" in entry.value && entry.value.values) {
+					if (entry.value.unit === "suurah") {
+						let surahParts = entry.value.values.map(v => {
+							let surah = getSurahByNumber(v)
+							return surah ? `${surah.number}. ${surah.nameArabic}` : `Surah ${v}`
+						})
+						parts.push(...surahParts)
+					} else if (entry.value.unit === "jizu") {
+						let juzParts = entry.value.values.map(v => `Juz ${v}`)
+						parts.push(...juzParts)
+					} else if (entry.value.unit === "hizbu") {
+						let hizbParts = entry.value.values.map(v => `Hizb ${v}`)
+						parts.push(...hizbParts)
+					} else if (entry.value.unit === "pages") {
+						let pageParts = entry.value.values.map(v => `${v} pages`)
+						parts.push(...pageParts)
+					}
+				} else if ("value" in entry.value && entry.value.value !== undefined) {
+					if (entry.value.unit === "suurah") {
+						let surah = getSurahByNumber(entry.value.value)
+						parts.push(
+							surah
+								? `${surah.number}. ${surah.nameArabic}`
+								: `Surah ${entry.value.value}`,
+						)
+					} else if (entry.value.unit === "jizu") {
+						parts.push(`Juz ${entry.value.value}`)
+					} else if (entry.value.unit === "hizbu") {
+						parts.push(`Hizb ${entry.value.value}`)
+					} else if (entry.value.unit === "pages") {
+						parts.push(`${entry.value.value} pages`)
+					}
+				}
 				if (entry.value.pages) {
 					parts.push(
 						t("ibaadah.form.quran.pages.label") + ": " + entry.value.pages,
@@ -101,11 +135,38 @@ function IbaadahEntryListItem({
 				return parts.join(", ") || "-"
 			}
 			case "dhikr": {
-				let dhikrText = entry.value.count.toString()
-				if (entry.value.dhikrType) {
-					dhikrText += ` (${entry.value.dhikrType})`
+				let dhikrParts: string[] = []
+				if (entry.value.adhkaarIds && entry.value.adhkaarIds.length > 0) {
+					dhikrParts.push(`${entry.value.adhkaarIds.length} adhkaar`)
 				}
-				return dhikrText
+				if (entry.value.customDhikr) {
+					dhikrParts.push(entry.value.customDhikr)
+				}
+				if (entry.value.count) {
+					dhikrParts.push(`Count: ${entry.value.count}`)
+				}
+				return dhikrParts.join(", ") || "-"
+			}
+			case "nawaafil": {
+				let nawaafilParts: string[] = []
+				if (entry.value.nawaafilIds && entry.value.nawaafilIds.length > 0) {
+					nawaafilParts.push(`${entry.value.nawaafilIds.length} nawaafil`)
+				}
+				if (entry.value.customNawaafil) {
+					if (Array.isArray(entry.value.customNawaafil)) {
+						if (entry.value.customNawaafil.length > 0) {
+							let customParts = entry.value.customNawaafil.map(
+								c => `${c.name}${c.rakaat ? ` (${c.rakaat} rakaat)` : ""}`,
+							)
+							nawaafilParts.push(...customParts)
+						}
+					} else if (typeof entry.value.customNawaafil === "string") {
+						if (entry.value.customNawaafil) {
+							nawaafilParts.push(entry.value.customNawaafil)
+						}
+					}
+				}
+				return nawaafilParts.join(", ") || "-"
 			}
 			case "sadaqa": {
 				let sadaqaParts: string[] = []
@@ -117,10 +178,22 @@ function IbaadahEntryListItem({
 				}
 				return sadaqaParts.join(" - ") || "-"
 			}
-			case "fasting":
-				return entry.value.isRamadan
-					? t("ibaadah.form.fasting.ramadan.label")
-					: t("ibaadah.form.fasting.label")
+			case "fasting": {
+				let fastingParts: string[] = []
+				if (entry.value.fastingType === "ramadan") {
+					fastingParts.push(t("ibaadah.form.fasting.type.ramadan"))
+				} else if (entry.value.fastingType === "monday-thursday") {
+					fastingParts.push(t("ibaadah.form.fasting.type.mondayThursday"))
+				} else if (entry.value.fastingType === "ayyaamul-beed") {
+					fastingParts.push(t("ibaadah.form.fasting.type.ayyaamulBeed"))
+				} else if (entry.value.fastingType === "custom") {
+					fastingParts.push(
+						entry.value.customDescription ||
+							t("ibaadah.form.fasting.type.custom"),
+					)
+				}
+				return fastingParts.join(", ") || "-"
+			}
 			case "custom":
 				return entry.value.value
 		}
@@ -132,6 +205,7 @@ function IbaadahEntryListItem({
 		dhikr: t("dashboard.dhikr.title"),
 		sadaqa: t("dashboard.sadaqa.title"),
 		fasting: t("dashboard.fasting.title"),
+		nawaafil: t("ibaadah.form.type.nawaafil"),
 		custom: t("ibaadah.habit.form.type.custom"),
 	}
 	let typeLabel = typeLabelMap[entry.type]
@@ -205,25 +279,53 @@ function IbaadahEntryListItem({
 								entry.value.type === "salah"
 									? (entry.value.prayers as SalahPrayer[])
 									: undefined,
+							quranUnit:
+								entry.value.type === "quran" ? entry.value.unit : undefined,
+							quranValues:
+								entry.value.type === "quran"
+									? "values" in entry.value && entry.value.values
+										? entry.value.values
+										: "value" in entry.value && entry.value.value !== undefined
+											? [entry.value.value as number]
+											: []
+									: undefined,
 							quranPages:
 								entry.value.type === "quran" ? entry.value.pages : undefined,
 							quranMinutes:
 								entry.value.type === "quran" ? entry.value.minutes : undefined,
+							adhkaarIds:
+								entry.value.type === "dhikr" ? entry.value.adhkaarIds : undefined,
+							customDhikr:
+								entry.value.type === "dhikr"
+									? entry.value.customDhikr
+									: undefined,
 							dhikrCount:
 								entry.value.type === "dhikr" ? entry.value.count : undefined,
-							dhikrType:
-								entry.value.type === "dhikr"
-									? entry.value.dhikrType
-									: undefined,
 							sadaqaAmount:
 								entry.value.type === "sadaqa" ? entry.value.amount : undefined,
 							sadaqaDescription:
 								entry.value.type === "sadaqa"
 									? entry.value.description
 									: undefined,
-							fastingIsRamadan:
+							fastingType:
 								entry.value.type === "fasting"
-									? entry.value.isRamadan
+									? entry.value.fastingType
+									: undefined,
+							fastingCustomDescription:
+								entry.value.type === "fasting"
+									? entry.value.customDescription
+									: undefined,
+							nawaafilIds:
+								entry.value.type === "nawaafil"
+									? entry.value.nawaafilIds
+									: undefined,
+							customNawaafil:
+								entry.value.type === "nawaafil" && entry.value.customNawaafil
+									? Array.isArray(entry.value.customNawaafil)
+										? entry.value.customNawaafil
+										: typeof entry.value.customNawaafil === "string"
+											? [{ name: entry.value.customNawaafil, rakaat: entry.value.rakaat }]
+											: []
 									: undefined,
 							customValue:
 								entry.value.type === "custom" ? entry.value.value : undefined,

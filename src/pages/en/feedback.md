@@ -1,7 +1,7 @@
 ---
 layout: ../../www/layouts/LegalPageLayout.astro
 title: "Feedback"
-description: "Send feedback and get in touch with the Tilly team."
+description: "Send feedback and get in touch with the Hasiber team."
 locale: "en"
 ---
 
