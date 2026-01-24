@@ -1,10 +1,10 @@
 import { useState } from "react"
 import type { ReflectionMood } from "#shared/schema/reflection"
-import { Button } from "#app/components/ui/button"
-import { Textarea } from "#app/components/ui/textarea"
-import { Badge } from "#app/components/ui/badge"
-import { Label } from "#app/components/ui/label"
-import { cn } from "#app/utils"
+import { Button } from "#shared/ui/button"
+import { Textarea } from "#shared/ui/textarea"
+import { Badge } from "#shared/ui/badge"
+import { Label } from "#shared/ui/label"
+import { cn } from "#app/lib/utils"
 
 interface ReflectionEditorProps {
 	initialContent?: string
@@ -100,7 +100,9 @@ export function ReflectionEditor({
 					id="content"
 					placeholder="What's on your mind today? Reflect on your Ibaadah, your state, or your gratitude..."
 					value={content}
-					onChange={e => setContent(e.target.value)}
+					onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) =>
+						setContent(e.target.value)
+					}
 					className="min-h-[150px] resize-y text-lg"
 				/>
 			</div>

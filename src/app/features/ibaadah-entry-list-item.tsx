@@ -108,7 +108,10 @@ function IbaadahEntryListItem({
 						let pageParts = entry.value.values.map(v => `${v} pages`)
 						parts.push(...pageParts)
 					}
-				} else if ("value" in entry.value && entry.value.value !== undefined) {
+				} else if (
+					"value" in entry.value &&
+					typeof entry.value.value === "number"
+				) {
 					if (entry.value.unit === "suurah") {
 						let surah = getSurahByNumber(entry.value.value)
 						parts.push(
@@ -331,7 +334,6 @@ function IbaadahEntryListItem({
 											? [
 													{
 														name: entry.value.customNawaafil,
-														rakaat: entry.value.rakaat,
 													},
 												]
 											: []

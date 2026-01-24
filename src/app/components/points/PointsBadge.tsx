@@ -1,6 +1,6 @@
 import { usePoints } from "#app/features/points/use-points"
-import { Badge } from "#app/components/ui/badge"
-import { cn } from "#app/utils"
+import { Badge } from "#shared/ui/badge"
+import { cn } from "#app/lib/utils"
 
 export function PointsBadge({ className }: { className?: string }) {
 	const { balance } = usePoints()

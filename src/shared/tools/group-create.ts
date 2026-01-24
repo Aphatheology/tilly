@@ -2,6 +2,7 @@ import { UserAccount } from "#shared/schema/user"
 import { IbaadahGroup } from "#shared/schema/group"
 import { Group, co } from "jazz-tools"
 import { IbaadahEntry } from "#shared/schema/ibaadah"
+import { Reflection } from "#shared/schema/reflection"
 import { tryCatch } from "#shared/lib/trycatch"
 import type { co as CoType } from "jazz-tools"
 
@@ -20,7 +21,7 @@ export let errors = {
 export async function createIbaadahGroup(
 	data: Omit<
 		IbaadahGroupData,
-		"version" | "createdAt" | "updatedAt" | "entries"
+		"version" | "createdAt" | "updatedAt" | "entries" | "reflections"
 	>,
 	options: { userId: string },
 ): Promise<IbaadahGroupCreated> {
@@ -42,6 +43,7 @@ export async function createIbaadahGroup(
 			name: data.name,
 			description: data.description,
 			entries: co.list(IbaadahEntry).create([], jazzGroup),
+			reflections: co.list(Reflection).create([], jazzGroup),
 			createdAt: now,
 			updatedAt: now,
 		},

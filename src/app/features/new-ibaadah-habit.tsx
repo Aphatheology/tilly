@@ -45,7 +45,7 @@ function NewIbaadahHabit(props: {
 		let result = await tryCatch(
 			createIbaadahHabit(
 				{
-					version: 1,
+					version: 2,
 					name: values.name,
 					type: values.type as IbaadahType,
 					description: values.description,

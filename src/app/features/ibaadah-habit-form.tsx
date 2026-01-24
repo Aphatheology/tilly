@@ -236,7 +236,15 @@ function IbaadahHabitForm({
 function createIbaadahHabitFormSchema(t: ReturnType<typeof useIntl>) {
 	return z.object({
 		name: z.string().min(1, t("ibaadah.habit.form.name.required")),
-		type: z.enum(["salah", "quran", "dhikr", "sadaqa", "fasting", "custom"]),
+		type: z.enum([
+			"salah",
+			"quran",
+			"dhikr",
+			"sadaqa",
+			"fasting",
+			"nawaafil",
+			"custom",
+		]),
 		description: z.string().optional(),
 		goal: z
 			.object({
