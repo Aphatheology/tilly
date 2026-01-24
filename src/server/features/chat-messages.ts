@@ -305,7 +305,8 @@ async function generateAIResponse(params: {
 		let gw = createGateway({ apiKey: AI_GATEWAY_API_KEY })
 
 		let result = streamText({
-			model: gw("google/gemini-2.5-flash"),
+		// eslint-disable-next-line @typescript-eslint/no-explicit-any
+		model: gw("google/gemini-2.5-flash") as any,
 			messages: params.modelMessages,
 			system: makeStaticSystemPrompt(),
 			tools: allTools,
